@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prescription Scanner - MedAI Assistant</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/scanner.css">
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/scanner.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -27,14 +27,33 @@
                 <div class="upload-area" id="uploadArea">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <p>Drag & Drop your prescription or Click to Upload</p>
-                    <input type="file" id="prescriptionInput" accept="image/*" hidden>
+
+                    <form method="POST" enctype="multipart/form-data">
+                    <input type="file" name="imageInput" id="imageInput" accept="image/*">
+
+                    <button type="submit" class="scan-button" id="scanButton">Upload & Scan</button>
+                    </form>
+                    
+                    {% if result %}
+                    <h2>Processed Output:</h2>
+                    <ul>
+                        {% for item in result %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                
                 </div>
-                <button class="scan-button" id="scanButton" disabled>Upload & Scan</button>
+
+                
             </div>
+
             <div class="results" id="scanResults" hidden>
                 <h3>Scan Results</h3>
                 <div class="result-content"></div>
                 <div class="result-actions">
+
+
                     <button class="action-button" id="downloadButton">
                         <i class="fas fa-download"></i> Download
                     </button>

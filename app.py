@@ -62,7 +62,7 @@ def split_into_unique_words(text):
     return unique_words
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/scanner', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         if 'imageInput' not in request.files:
@@ -78,8 +78,17 @@ def upload_file():
             
             extracted_text = extract_text(file_path)
             listDisplayed=split_into_unique_words(extracted_text)
-            return render_template('index.html',result=listDisplayed)
+            return render_template('scanner.html',result=listDisplayed)
     
+    return render_template('scanner.html', result=None)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/scanner")
+def scanner_page():
+    return render_template("scanner.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
