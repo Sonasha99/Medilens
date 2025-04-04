@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request,jsonify,redirect, url_for
 import pytesseract
 import cv2
 import os
 import numpy as np
+import requests
 import re
 from werkzeug.utils import secure_filename
 from collections import OrderedDict
@@ -18,27 +19,19 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 def preprocess_image(image_path):
     image = cv2.imread(image_path)
 
-    # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # 🔥 Increase contrast for better OCR detection
-    alpha = 1.8  # Contrast control (1.0-3.0)
-    beta = 20    # Brightness control (0-100)
+    alpha = 1.8  
+    beta = 20    
     contrast = cv2.convertScaleAbs(gray, alpha=alpha, beta=beta)
 
-    # 🧼 Apply Gaussian Blur to remove noise while keeping text sharp
     blur = cv2.GaussianBlur(contrast, (3, 3), 0)
 
-    # 🎯 Adaptive Thresholding to binarize the image
     thresh = cv2.adaptiveThreshold(
         blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
     )
-
-    # 🔄 Morphological Operations to preserve word spacing
     kernel = np.ones((2,2), np.uint8)
     processed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 
-    # 📸 Save the processed image for debugging
     cv2.imwrite("processed_debug.png", processed)
 
     return processed
@@ -82,6 +75,59 @@ def upload_file():
     
     return render_template('scanner.html', result=None)
 
+
+def get_coordinates(location):
+    geocode_url = f"https://nominatim.openstreetmap.org/search?q={requests.utils.quote(location)}&format=json"
+    headers = {'User-Agent': 'Mozilla/5.0 (MyPharmacyApp/1.0)'}
+    response = requests.get(geocode_url, headers=headers)
+    
+    if response.status_code == 200 and response.json():
+        result = response.json()[0]
+        return float(result["lat"]), float(result["lon"])
+    return None, None
+
+# Get nearby pharmacies using Overpass API
+def fetch_nearby_medical_stores(lat, lon):
+    query = f"""
+        [out:json];
+        node["amenity"="pharmacy"](around:5000,{lat},{lon});
+        out;
+    """
+    url = "https://overpass-api.de/api/interpreter?data=" + requests.utils.quote(query)
+    headers = {'User-Agent': 'Mozilla/5.0 (MyPharmacyApp/1.0)'}
+    response = requests.get(url, headers=headers)
+    
+    try:
+        data = response.json()
+        pharmacies = [{
+            "name": elem.get("tags", {}).get("name", "Unnamed Pharmacy"),
+            "lat": elem.get("lat"),
+            "lon": elem.get("lon")
+        } for elem in data.get("elements", [])]
+        return pharmacies
+    except:
+        return []
+
+@app.route('/stores', methods=['GET', 'POST'])
+def gettingPharmacy():
+    pharmacies = []
+    error = None
+
+    if request.method == 'POST':
+        location = request.form.get('location')
+        if location:
+            lat, lon = get_coordinates(location)
+            if lat and lon:
+                pharmacies = fetch_nearby_medical_stores(lat, lon)
+                if not pharmacies:
+                    error = "No pharmacies found nearby."
+            else:
+                error = "Location not found."
+        else:
+            error = "Please enter a location."
+
+    return render_template('stores.html', pharmacies=pharmacies, error=error)
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -90,9 +136,14 @@ def home():
 def scanner_page():
     return render_template("scanner.html")
 
+
+
+
+
 @app.route("/stores")
 def stores_page():
     return render_template("stores.html")
+
 
 @app.route("/contact")
 def contact_page():
@@ -100,3 +151,9 @@ def contact_page():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+
+
