@@ -90,5 +90,13 @@ def home():
 def scanner_page():
     return render_template("scanner.html")
 
+@app.route("/stores")
+def stores_page():
+    return render_template("stores.html")
+
+@app.route("/contact")
+def contact_page():
+    return render_template("contact.html")
+
 if __name__ == '__main__':
     app.run(debug=True)

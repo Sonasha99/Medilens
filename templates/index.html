@@ -15,11 +15,11 @@
     <nav class="navbar">
       <div class="logo">MediLens</div>
       <ul class="nav-links">
-        <li><a href=index.htmls class="active">Home</a></li>
+        <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
         <li><a href="{{ url_for('scanner_page') }}">Prescription Scanner</a></li>
         <li><a href="report.html">Report Generation</a></li>
-        <li><a href="stores.html">Medical Stores</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
+        <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
       </ul>
     </nav>
 

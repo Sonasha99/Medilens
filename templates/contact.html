@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - MedAI Assistant</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/contact.css">
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/contact.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">MedAI Assistant</div>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="scanner.html">Prescription Scanner</a></li>
-            <li><a href="report.html">Report Generation</a></li>
-            <li><a href="stores.html">Medical Stores</a></li>
-            <li><a href="contact.html" class="active">Contact</a></li>
+        <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
+        <li><a href="{{ url_for('scanner_page') }}">Prescription Scanner</a></li>
+        <li><a href="report.html">Report Generation</a></li>
+        <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
+        <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
         </ul>
     </nav>
 
