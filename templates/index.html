@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MediLens Assistant - AI-Powered Healthcare Solutions</title>
-    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/main.css" />
     <link rel="stylesheet" href="/static/home.css" />
     <link
       rel="stylesheet"
@@ -16,8 +16,11 @@
       <div class="logo">MediLens</div>
       <ul class="nav-links">
         <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
-        <li><a href="{{ url_for('scanner_page') }}">Prescription Scanner</a></li>
-        <li><a href="report.html">Report Generation</a></li>
+        <li>
+          <a href="{{ url_for('scanner_page') }}">Prescription Scanner</a>
+        </li>
+
+        <li><a href="{{ url_for('analyze') }}">Report Generation</a></li>
         <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
         <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
       </ul>

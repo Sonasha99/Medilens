@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Upload</title>
+  </head>
+  <body>
+    <h2>Upload Ultrasound Image</h2>
+    <form method="POST" action="/analyze" enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/*" />
+      <input type="submit" value="Analyze" />
+    </form>
+  </body>
+</html>
