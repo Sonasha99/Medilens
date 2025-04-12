@@ -4,6 +4,4 @@ pytesseract==0.3.10
 opencv-python==4.8.1.78
 Pillow==10.2.0
 numpy==1.24.4
-ultralytics==8.0.198
-torch>=1.13.0
 requests==2.31.0
