@@ -1,3 +1,263 @@
+<!-- <!DOCTYPE html> -->
+<!-- <html lang="en"> -->
+<!-- <head> -->
+<!-- <meta charset="UTF-8" /> -->
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+<!-- <title>Report Generation - MedAI Assistant</title> -->
+<!-- <link -->
+<!-- rel="stylesheet" -->
+<!-- href="{{ url_for('static', filename='main.css') }}" -->
+<!-- /> -->
+<!-- <link -->
+<!-- rel="stylesheet" -->
+<!-- href="{{ url_for('static', filename='report.css') }}" -->
+<!-- /> -->
+<!-- <link -->
+<!-- rel="stylesheet" -->
+<!-- href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" -->
+<!-- /> -->
+<!-- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"> -->
+<!-- <style> -->
+<!-- body { -->
+<!-- font-family: 'Poppins', sans-serif; -->
+<!-- background-color: #f4f4f4; -->
+<!-- margin: 0; -->
+<!-- padding: 0; -->
+<!-- } -->
+<!-- .container { -->
+<!-- width: 80%; -->
+<!-- margin: 20px auto; -->
+<!-- background: white; -->
+<!-- border-radius: 10px; -->
+<!-- padding: 20px; -->
+<!-- box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); -->
+<!-- } -->
+<!-- .header { -->
+<!-- text-align: center; -->
+<!-- color: #2a9d8f; -->
+<!-- padding: 10px 0; -->
+<!-- } -->
+<!-- .header h1 { -->
+<!-- font-size: 36px; -->
+<!-- } -->
+<!-- .report-container { -->
+<!-- background-color: #fff; -->
+<!-- padding: 20px; -->
+<!-- border-radius: 10px; -->
+<!-- box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); -->
+<!-- } -->
+<!-- .section { -->
+<!-- margin-bottom: 20px; -->
+<!-- } -->
+<!-- .section h2 { -->
+<!-- color: #264653; -->
+<!-- font-size: 24px; -->
+<!-- } -->
+<!-- .section p { -->
+<!-- font-size: 18px; -->
+<!-- line-height: 1.6; -->
+<!-- } -->
+<!-- .report-button { -->
+<!-- background-color: #2a9d8f; -->
+<!-- color: white; -->
+<!-- border: none; -->
+<!-- padding: 10px 20px; -->
+<!-- border-radius: 5px; -->
+<!-- cursor: pointer; -->
+<!-- font-size: 16px; -->
+<!-- text-align: center; -->
+<!-- } -->
+<!-- .report-button:hover { -->
+<!-- background-color: #21867a; -->
+<!-- } -->
+<!-- .report-image { -->
+<!-- width: 100%; -->
+<!-- max-height: 400px; -->
+<!-- border-radius: 10px; -->
+<!-- margin-bottom: 20px; -->
+<!-- } -->
+<!-- .footer { -->
+<!-- text-align: center; -->
+<!-- margin-top: 40px; -->
+<!-- font-size: 16px; -->
+<!-- color: #888; -->
+<!-- } -->
+<!-- </style> -->
+
+<!-- <body> -->
+<!-- </head> -->
+<!-- <body> -->
+<!-- <nav class="navbar"> -->
+<!-- <div class="logo">MedAI Assistant</div> -->
+<!-- <ul class="nav-links"> -->
+<!-- <li><a href="{{ url_for('home') }}" class="active">Home</a></li> -->
+<!-- <li> -->
+<!-- <a href="{{ url_for('scanner_page') }}">Prescription Scanner</a> -->
+<!-- </li> -->
+<!-- <li><a href="{{ url_for('home') }}">Report Generation</a></li> -->
+<!-- <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li> -->
+<!-- <li><a href="{{ url_for('contact_page') }}">Contact</a></li> -->
+<!-- </ul> -->
+<!-- </nav> -->
+
+<!-- <main> -->
+<!-- <section class="report-section"> -->
+<!-- <h2>Medical Report Generation</h2> -->
+<!-- <div class="upload-container"> -->
+<!-- <form -->
+<!-- id="uploadForm" -->
+<!-- action="{{ url_for('report') }}" -->
+<!-- method="POST" -->
+<!-- enctype="multipart/form-data" -->
+<!-- <input type="file" name="image" /> -->
+<!-- <input type="submit" value="Upload" /> -->
+<!-- > -->
+<!-- <label for="reportInput" class="upload-area" id="uploadArea"> -->
+<!-- <i class="fas fa-file-medical"></i> -->
+<!-- <p>Upload your medical report or ultrasound image</p> -->
+<!-- <input -->
+<!-- type="file" -->
+<!-- name="image" -->
+<!-- id="reportInput" -->
+<!-- accept="image/*,.pdf" -->
+<!-- onchange="enableButton()" -->
+<!-- required -->
+<!-- /> -->
+<!-- </label> -->
+<!-- <button class="generate-button" id="generateButton" disabled> -->
+<!-- Generate Report -->
+<!-- </button> -->
+<!-- </form> -->
+<!-- </div> -->
+
+<!-- <div class="container"> -->
+<!-- <div class="header"> -->
+<!-- <h1>Fetal Ultrasound Diagnostic Report</h1> -->
+<!-- </div> -->
+<!-- {% if image_path %} -->
+<!-- <h2>Uploaded Image:</h2> -->
+<!-- <img src="{{ url_for('static', filename='uploads/' + image_path.split('/')[-1])}}" alt="Ultrasound Image" style="max-width: 400px;"> -->
+<!-- {% endif %} -->
+<!-- {% if report %} -->
+<!-- <div class="report-container"> -->
+<!-- <h2>Analyzed Image</h2> -->
+<!-- <img class="report-image" src="{{ url_for('static', filename='uploads/' + image_path.split('/')[-1])  }}" alt="Ultrasound Image" -->
+
+<!-- <div class="section"> -->
+<!-- <h2>Key Structures Detected</h2> -->
+<!-- <ul> -->
+<!-- <li><strong>Thalami:</strong> {{ report['Thalami'] }}</li> -->
+<!-- <li><strong>Midbrain:</strong> {{ report['Midbrain'] }}</li> -->
+<!-- <li><strong>Palate:</strong> {{ report['Palate'] }}</li> -->
+<!-- <li><strong>4th Ventricle:</strong> {{ report['4th Ventricle'] }}</li> -->
+<!-- <li><strong>Cisterna Magna:</strong> {{ report['Cisterna Magna'] }}</li> -->
+<!-- <li><strong>Nuchal Translucency (NT):</strong> {{ report['NT Measurement'] }}</li> -->
+<!-- <li><strong>Nasal Tip:</strong> {{ report['Nasal Tip'] }}</li> -->
+<!-- <li><strong>Nasal Skin:</strong> {{ report['Nasal Skin'] }}</li> -->
+<!-- <li><strong>Nasal Bone:</strong> {{ report['Nasal Bone'] }}</li> -->
+<!-- </ul> -->
+<!-- </div> -->
+
+<!-- <div class="section"> -->
+<!-- <h2>Diagnostic Results</h2> -->
+<!-- <p><strong>NT Measurement:</strong> {{ report["NT Measurement"] }} mm</p> -->
+<!-- <p><strong>Presence of Nasal Bone:</strong> {{ report['Presence of Nasal Bone'] }}</p> -->
+<!-- <p><strong>Cisterna Magna Visibility:</strong> {{ report['Cisterna Magna Visibility'] }}</p> -->
+<!-- <p><strong>Down Syndrome Risk Assessment:</strong> {{ report['Down Syndrome Risk'] }}</p> -->
+<!-- </div> -->
+
+<!-- <button class="report-button" onclick="window.print()">Generate Report</button> -->
+<!-- </div> -->
+<!-- {% else %} -->
+<!-- <div class="section"> -->
+<!-- <p>No report generated yet. Please upload and analyze an image.</p> -->
+<!-- </div> -->
+<!-- {% endif %} -->
+
+<!-- {% if image_path %} -->
+<!-- <div class="results" id="reportResults"> -->
+<!-- <h3>Analysis Results</h3> -->
+<!-- <div class="result-content"> -->
+<!-- <img -->
+<!-- src="{{ url_for('static', filename=image_path) }}" -->
+<!-- alt="YOLOv8 Output" -->
+<!-- style="max-width: 100%; height: auto" -->
+<!-- /> -->
+<!-- <ul> -->
+<!-- {% for label in labels %} -->
+<!-- <li>{{ label }}</li> -->
+<!-- {% endfor %} -->
+<!-- </ul> -->
+<!-- </div> -->
+<!-- <div class="result-actions"> -->
+<!-- <a class="action-button" href="{{ image_path }}" download> -->
+<!-- <i class="fas fa-download"></i> Download Image -->
+<!-- </a> -->
+<!-- <button -->
+<!-- class="action-button" -->
+<!-- onclick="alert('Sharing feature coming soon!')" -->
+<!-- > -->
+<!-- <i class="fas fa-share"></i> Share Report -->
+<!-- </button> -->
+<!-- </div> -->
+<!-- </div> -->
+<!-- {% endif %} -->
+<!-- </section> -->
+<!-- </main> -->
+
+<!-- <footer class="footer"> -->
+<!-- <div class="footer-content"> -->
+<!-- <div class="footer-section"> -->
+<!-- <h3>Quick Links</h3> -->
+<!-- <ul> -->
+<!-- <li><a href="{{ url_for('home') }}">Home</a></li> -->
+<!-- <li> -->
+<!-- <a href="{{ url_for('scanner_page') }}">Prescription Scanner</a> -->
+<!-- </li> -->
+<!-- <li><a href="{{ url_for('home') }}">Report Generation</a></li> -->
+<!-- <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li> -->
+<!-- </ul> -->
+<!-- </div> -->
+<!-- <div class="footer-section"> -->
+<!-- <h3>Services</h3> -->
+<!-- <ul> -->
+<!-- <li><a href="#">AI Analysis</a></li> -->
+<!-- <li><a href="#">Medical Reports</a></li> -->
+<!-- <li><a href="#">Store Locator</a></li> -->
+<!-- <li><a href="#">Healthcare Support</a></li> -->
+<!-- </ul> -->
+<!-- </div> -->
+<!-- <div class="footer-section"> -->
+<!-- <h3>Contact</h3> -->
+<!-- <ul> -->
+<!-- <li>Email: support@medai-assistant.com</li> -->
+<!-- <li>Phone: +1 (555) 123-4567</li> -->
+<!-- <li>Address: 123 Healthcare Ave</li> -->
+<!-- </ul> -->
+<!-- </div> -->
+<!-- <div class="footer-section"> -->
+<!-- <h3>Follow Us</h3> -->
+<!-- <div class="footer-social"> -->
+<!-- <a href="#"><i class="fab fa-facebook"></i></a> -->
+<!-- <a href="#"><i class="fab fa-twitter"></i></a> -->
+<!-- <a href="#"><i class="fab fa-linkedin"></i></a> -->
+<!-- <a href="#"><i class="fab fa-instagram"></i></a> -->
+<!-- </div> -->
+<!-- </div> -->
+<!-- </div> -->
+<!-- <div class="footer-bottom"> -->
+<!-- <p>&copy; 2024 MedAI Assistant. All rights reserved.</p> -->
+<!-- </div> -->
+<!-- </footer> -->
+
+<!-- <script> -->
+<!-- function enableButton() { -->
+<!-- document.getElementById("generateButton").disabled = false; -->
+<!-- } -->
+<!-- </script> -->
+<!-- </body> -->
+<!-- </html> -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -16,234 +276,179 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 80%;
-            margin: 20px auto;
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-            text-align: center;
-            color: #2a9d8f;
-            padding: 10px 0;
-        }
-        .header h1 {
-            font-size: 36px;
-        }
-        .report-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .section {
-            margin-bottom: 20px;
-        }
-        .section h2 {
-            color: #264653;
-            font-size: 24px;
-        }
-        .section p {
-            font-size: 18px;
-            line-height: 1.6;
-        }
-        .report-button {
-            background-color: #2a9d8f;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            text-align: center;
-        }
-        .report-button:hover {
-            background-color: #21867a;
-        }
-        .report-image {
-            width: 100%;
-            max-height: 400px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 16px;
-            color: #888;
-        }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        width: 80%;
+        margin: 20px auto;
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        text-align: center;
+        color: #2a9d8f;
+        padding: 10px 0;
+      }
+      .header h1 {
+        font-size: 36px;
+      }
+      .report-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .section {
+        margin-bottom: 20px;
+      }
+      .section h2 {
+        color: #264653;
+        font-size: 24px;
+      }
+      .section p {
+        font-size: 18px;
+        line-height: 1.6;
+      }
+      .report-button {
+        background-color: #2a9d8f;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+      }
+      .report-button:hover {
+        background-color: #21867a;
+      }
+      .report-image {
+        width: 100%;
+        max-height: 400px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 16px;
+        color: #888;
+      }
     </style>
-
-<body>
   </head>
-  <body>
-    <nav class="navbar">
-      <div class="logo">MedAI Assistant</div>
-      <ul class="nav-links">
-        <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
-        <li>
-          <a href="{{ url_for('scanner_page') }}">Prescription Scanner</a>
-        </li>
-        <li><a href="{{ url_for('home') }}">Report Generation</a></li>
-        <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
-        <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
-      </ul>
-    </nav>
 
+  <body>
     <main>
       <section class="report-section">
-        <h2>Medical Report Generation</h2>
-        <div class="upload-container">
-          <form
-            id="uploadForm"
-            action="{{ url_for('analyze') }}"
-            method="POST"
-            enctype="multipart/form-data"
-          >
-            <label for="reportInput" class="upload-area" id="uploadArea">
-              <i class="fas fa-file-medical"></i>
-              <p>Upload your medical report or ultrasound image</p>
-              <input
-                type="file"
-                name="image"
-                id="reportInput"
-                accept="image/*,.pdf"
-                onchange="enableButton()"
-                required
-              />
-            </label>
-            <button class="generate-button" id="generateButton" disabled>
-              Generate Report
-            </button>
-          </form>
-        </div>
-
-
- <div class="container">
-        <div class="header">
+        <div class="container">
+          <div class="header">
             <h1>Fetal Ultrasound Diagnostic Report</h1>
-        </div>
+          </div>
 
-        {% if report %}
-            <div class="report-container">
-                <h2>Analyzed Image</h2>
-                <img class="report-image" src="{{ url_for('static', filename=image_path) }}" alt="Ultrasound Image">
+          <div class="upload-container">
+            <form
+              action="{{ url_for('analyze') }}"
+              method="POST"
+              enctype="multipart/form-data"
+            >
+              <label for="reportInput" class="upload-area" id="uploadArea">
+                <i class="fas fa-file-medical"></i>
+                <p>Upload your ultrasound image</p>
+                <input
+                  type="file"
+                  name="image"
+                  id="reportInput"
+                  accept="image/*"
+                  required
+                  onchange="enableButton()"
+                />
+              </label>
+              <button class="report-button" id="generateButton" disabled>
+                Generate Report
+              </button>
+            </form>
+          </div>
 
-                <div class="section">
-                    <h2>Key Structures Detected</h2>
-                    <ul>
-                        <li><strong>Thalami:</strong> {{ report['Thalami'] }}</li>
-                        <li><strong>Midbrain:</strong> {{ report['Midbrain'] }}</li>
-                        <li><strong>Palate:</strong> {{ report['Palate'] }}</li>
-                        <li><strong>4th Ventricle:</strong> {{ report['4th Ventricle'] }}</li>
-                        <li><strong>Cisterna Magna:</strong> {{ report['Cisterna Magna'] }}</li>
-                        <li><strong>Nuchal Translucency (NT):</strong> {{ report['NT Measurement'] }}</li>
-                        <li><strong>Nasal Tip:</strong> {{ report['Nasal Tip'] }}</li>
-                        <li><strong>Nasal Skin:</strong> {{ report['Nasal Skin'] }}</li>
-                        <li><strong>Nasal Bone:</strong> {{ report['Nasal Bone'] }}</li>
-                    </ul>
-                </div>
-
-                <div class="section">
-                    <h2>Diagnostic Results</h2>
-                    <p><strong>NT Measurement:</strong> {{ report['NT Measurement'] }} mm</p>
-                    <p><strong>Presence of Nasal Bone:</strong> {{ report['Presence of Nasal Bone'] }}</p>
-                    <p><strong>Cisterna Magna Visibility:</strong> {{ report['Cisterna Magna Visibility'] }}</p>
-                    <p><strong>Down Syndrome Risk Assessment:</strong> {{ report['Down Syndrome Risk'] }}</p>
-                </div>
-
-                <button class="report-button" onclick="window.print()">Generate Report</button>
-            </div>
-        {% else %}
-            <div class="section">
-                <p>No report generated yet. Please upload and analyze an image.</p>
-            </div>
-        {% endif %}
-        
-        {% if image_path %}
-        <div class="results" id="reportResults">
-          <h3>Analysis Results</h3>
-          <div class="result-content">
+          {% if report %}
+          <div class="report-container">
+            <h2>Analyzed Image</h2>
             <img
+              class="report-image"
               src="{{ url_for('static', filename=image_path) }}"
               alt="YOLOv8 Output"
               style="max-width: 100%; height: auto"
+              alt="Ultrasound Image"
             />
-            <ul>
-              {% for label in labels %}
-              <li>{{ label }}</li>
-              {% endfor %}
-            </ul>
-          </div>
-          <div class="result-actions">
-            <a class="action-button" href="{{ image_path }}" download>
-              <i class="fas fa-download"></i> Download Image
-            </a>
-            <button
-              class="action-button"
-              onclick="alert('Sharing feature coming soon!')"
-            >
-              <i class="fas fa-share"></i> Share Report
+
+            <div class="section">
+              <h2>Key Structures Detected</h2>
+              <ul>
+                <li><strong>Thalami:</strong> {{ report['Thalami'] }}</li>
+                <li><strong>Midbrain:</strong> {{ report['Midbrain'] }}</li>
+                <li><strong>Palate:</strong> {{ report['Palate'] }}</li>
+                <li>
+                  <strong>4th Ventricle:</strong> {{ report['4th Ventricle'] }}
+                </li>
+                <li>
+                  <strong>Cisterna Magna:</strong> {{ report['Cisterna Magna']
+                  }}
+                </li>
+                <li>
+                  <strong>Nuchal Translucency (NT):</strong> {{ report['NT
+                  Measurement'] }}
+                </li>
+                <li><strong>Nasal Tip:</strong> {{ report['Nasal Tip'] }}</li>
+                <li><strong>Nasal Skin:</strong> {{ report['Nasal Skin'] }}</li>
+                <li><strong>Nasal Bone:</strong> {{ report['Nasal Bone'] }}</li>
+              </ul>
+            </div>
+
+            <div class="section">
+              <h2>Diagnostic Results</h2>
+              <p>
+                <strong>NT Measurement:</strong> {{ report['NT Measurement'] }}
+                mm
+              </p>
+              <p>
+                <strong>Presence of Nasal Bone:</strong> {{ report['Presence of
+                Nasal Bone'] }}
+              </p>
+              <p>
+                <strong>Cisterna Magna Visibility:</strong> {{ report['Cisterna
+                Magna Visibility'] }}
+              </p>
+              <p>
+                <strong>Down Syndrome Risk Assessment:</strong> {{ report['Down
+                Syndrome Risk'] }}
+              </p>
+            </div>
+
+            <button class="report-button" onclick="window.print()">
+              Print Report
             </button>
           </div>
+          {% else %}
+          <div class="section">
+            <p>No report generated yet. Please upload and analyze an image.</p>
+          </div>
+          {% endif %}
         </div>
-        {% endif %}
       </section>
     </main>
 
     <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>Quick Links</h3>
-          <ul>
-            <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li>
-              <a href="{{ url_for('scanner_page') }}">Prescription Scanner</a>
-            </li>
-            <li><a href="{{ url_for('home') }}">Report Generation</a></li>
-            <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h3>Services</h3>
-          <ul>
-            <li><a href="#">AI Analysis</a></li>
-            <li><a href="#">Medical Reports</a></li>
-            <li><a href="#">Store Locator</a></li>
-            <li><a href="#">Healthcare Support</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h3>Contact</h3>
-          <ul>
-            <li>Email: support@medai-assistant.com</li>
-            <li>Phone: +1 (555) 123-4567</li>
-            <li>Address: 123 Healthcare Ave</li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h3>Follow Us</h3>
-          <div class="footer-social">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-linkedin"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2024 MedAI Assistant. All rights reserved.</p>
-      </div>
+      <p>&copy; 2025 MedAI Assistant. All rights reserved.</p>
     </footer>
 
     <script>
@@ -253,118 +458,3 @@
     </script>
   </body>
 </html>
-<!-- <!DOCTYPE html> -->
-<!-- <html lang="en"> -->
-<!-- <head> -->
-<!-- <meta charset="UTF-8" /> -->
-<!-- <title>Fetal Ultrasound Report</title> -->
-<!-- <style> -->
-<!-- body { -->
-<!-- font-family: "Segoe UI", sans-serif; -->
-<!-- background: #f5f9ff; -->
-<!-- padding: 40px; -->
-<!-- color: #333; -->
-<!-- } -->
-<!-- .report-container { -->
-<!-- max-width: 900px; -->
-<!-- margin: auto; -->
-<!-- background: #fff; -->
-<!-- padding: 30px; -->
-<!-- border-radius: 12px; -->
-<!-- box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); -->
-<!-- } -->
-<!-- .header { -->
-<!-- text-align: center; -->
-<!-- border-bottom: 2px solid #ddd; -->
-<!-- padding-bottom: 15px; -->
-<!-- margin-bottom: 25px; -->
-<!-- } -->
-<!-- .header h1 { -->
-<!-- margin: 0; -->
-<!-- color: #0d47a1; -->
-<!-- } -->
-<!-- .section { -->
-<!-- margin-bottom: 25px; -->
-<!-- } -->
-<!-- .section-title { -->
-<!-- font-weight: bold; -->
-<!-- font-size: 1.2em; -->
-<!-- color: #0d47a1; -->
-<!-- margin-bottom: 10px; -->
-<!-- } -->
-<!-- .image-preview img { -->
-<!-- width: 100%; -->
-<!-- border-radius: 10px; -->
-<!-- border: 1px solid #ccc; -->
-<!-- } -->
-<!-- .data-list { -->
-<!-- list-style: none; -->
-<!-- padding: 0; -->
-<!-- } -->
-<!-- .data-list li { -->
-<!-- margin: 5px 0; -->
-<!-- } -->
-<!-- .tag { -->
-<!-- display: inline-block; -->
-<!-- padding: 5px 10px; -->
-<!-- border-radius: 6px; -->
-<!-- margin: 5px 5px 0 0; -->
-<!-- font-size: 0.95em; -->
-<!-- background: #e3f2fd; -->
-<!-- color: #0d47a1; -->
-<!-- } -->
-<!-- .risk-low { -->
-<!-- background: #c8e6c9; -->
-<!-- color: #256029; -->
-<!-- } -->
-<!-- .risk-high { -->
-<!-- background: #ffcdd2; -->
-<!-- color: #b71c1c; -->
-<!-- } -->
-<!-- </style> -->
-<!-- </head> -->
-<!-- <body> -->
-<!-- <div class="report-container"> -->
-<!-- <div class="header"> -->
-<!-- <h1>MediLens Fetal Ultrasound Report</h1> -->
-<!-- <p><strong>Date:</strong> {{ current_date }}</p> -->
-<!-- </div> -->
-
-<!-- <div class="section image-preview"> -->
-<!-- <div class="section-title">Analyzed Image</div> -->
-<!-- <img src="{{ image_path }}" alt="Ultrasound Analysis" /> -->
-<!-- </div> -->
-
-<!-- <div class="section"> -->
-<!-- <div class="section-title">Detected Structures</div> -->
-<!-- {% if labels %} {% for label in labels %} -->
-<!-- <span class="tag">✅ {{ label.name }}</span> -->
-<!-- {% endfor %} {% else %} -->
-<!-- <p>No structures detected.</p> -->
-<!-- {% endif %} -->
-<!-- </div> -->
-
-<!-- <div class="section"> -->
-<!-- <div class="section-title">Diagnostic Parameters</div> -->
-<!-- <ul class="data-list"> -->
-<!-- <li> -->
-<!-- <strong>NT Measurement:</strong> {{ report["NT Measurement"] }} -->
-<!-- </li> -->
-<!-- <li><strong>Nasal Bone:</strong> {{ report["Nasal Bone"] }}</li> -->
-<!-- <li> -->
-<!-- <strong>Cisterna Magna:</strong> {{ report["Cisterna Magna"] }} -->
-<!-- </li> -->
-<!-- </ul> -->
-<!-- </div> -->
-
-<!-- <div class="section"> -->
-<!-- <div class="section-title">Risk Assessment</div> -->
-<!-- {% if report["Down Syndrome Risk"] == "High Risk" %} -->
-<!-- <span class="tag risk-high">⚠️ {{ report["Down Syndrome Risk"] }}</span> -->
-<!-- {% else %} -->
-<!-- <span class="tag risk-low">✅ {{ report["Down Syndrome Risk"] }}</span> -->
-<!-- {% endif %} -->
-<!-- </div> -->
-<!-- </div> -->
-<!-- </body> -->
-<!-- </html> -->

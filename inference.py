@@ -35,6 +35,7 @@ def yolo_inference_function(image_path):
     # Return the image path and detected labels
     return image_path, detected_labels
 def generate_ultrasound_report(labels):
+    print("🔍 Running YOLOv8 prediction...")
     report = {}
 
     structures = {label["name"]: label["bbox"] for label in labels}

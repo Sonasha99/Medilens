@@ -1,3 +1,5 @@
+from ultralytics import YOLO
+model =YOLO("best.pt")
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 import pytesseract
 import cv2
@@ -11,9 +13,14 @@ from inference import yolo_inference_function
 
 from datetime import datetime
 
+model = YOLO("best.pt")
+app= Flask(__name__)
 current_date = datetime.now().strftime("%Y-%m-%d %H:%M")
 
+# Folder to save uploaded images
+app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
 
+app.config['ALLOWED_EXTENSIONS'] = {'jpg', 'jpeg', 'png'}
 # Set the path for Tesseract OCR (Windows path example, modify accordingly)
 pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
 
@@ -27,6 +34,20 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 # Check if file is allowed for upload
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg'}
+
+@app.route('/')
+def reportGen():
+    report = {
+        "NT Measurement": "1.5 mm",
+        "Nasal Bone": "Present",
+        "Cisterna Magna": "Visible",
+        "Detected Structures": ["thalami", "midbrain", "nasal bone"],
+        "Down Syndrome Risk": "Low"
+    }
+    #image_path = "uploads/example.png"
+
+
+    return render_template('report.html',report=report,image_path=url_for('static', filename='uploads/' + filename))
 
 # Preprocess image for OCR
 def preprocess_image(image_path):
@@ -63,6 +84,7 @@ def split_into_unique_words(text):
 @app.route("/")
 def home():
     return render_template("index.html")
+
 
 # Scanner page route
 @app.route("/scanner", methods=['GET', 'POST'])
@@ -153,17 +175,52 @@ def analyze():
 
         # Run YOLOv8 model inference
         image_path, labels = yolo_inference_function(file_path)
-
+        print("Labels:", labels)  # debug
         report_data= generate_ultrasound_report(labels)
-
+        print("Report:", report_data)  # debug
         return render_template("report.html", image_path=image_path, labels=labels)
+
+
 
     return redirect(request.url)
 
-# Route for showing empty report page (GET method)
-@app.route("/report", methods=["GET"])
+@app.route('/report', methods=['GET', 'POST'])
 def report():
-    return render_template("report.html", image_path=None, labels=None , report={}, current_date=datetime.now().strftime("%B %d, %Y"))
+    if request.method == 'POST':
+        if 'image' not in request.files:
+            return "No file uploaded", 400
+        
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+
+            print("📁 File saved at:", filepath)
+
+            # Run YOLO model
+            results = model.predict(source=filepath)
+
+            # Extract labels
+            labels = [
+                {
+                    "name": r.names[r.boxes.cls[i].item()],
+                    "bbox": r.boxes.xyxy[i].tolist()
+                }
+                for r in results
+                for i in range(len(r.boxes.cls))
+            ]
+            report_data = generate_ultrasound_report(labels)
+            
+            image_path = url_for('static', filename='uploads/' + filename)
+
+            return render_template('report.html', report=report_data, image_path=url_for('static', filename='uploads/' + filename))
+           
+        return "Invalid file", 400
+
+    # GET request
+    return render_template('report.html', report=None, image_path=None)
+
 
  # Run the Flask app
 if __name__ == '__main__':
@@ -173,3 +230,4 @@ if __name__ == '__main__':
 for rule in app.url_map.iter_rules():
     print(rule)
 
+print("📝 Final report data:", report_data)
