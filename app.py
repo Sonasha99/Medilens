@@ -1,53 +1,32 @@
-from ultralytics import YOLO
-model =YOLO("best.pt")
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for,send_file,session
 import pytesseract
 import cv2
 import os
 import numpy as np
 import requests
 import re
+from io import BytesIO
+from weasyprint import HTML
+import matplotlib.pyplot as plt
 from werkzeug.utils import secure_filename
 from collections import OrderedDict
 from inference import yolo_inference_function
-
 from datetime import datetime
+import json
+from ultralytics import YOLO
+from PIL import Image
+import uuid
+import shutil
 
-model = YOLO("best.pt")
-app= Flask(__name__)
-current_date = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-# Folder to save uploaded images
-app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
+app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+model = YOLO("best.pt") 
 
-app.config['ALLOWED_EXTENSIONS'] = {'jpg', 'jpeg', 'png'}
 # Set the path for Tesseract OCR (Windows path example, modify accordingly)
 pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
 
-# Initialize Flask app
-app = Flask(__name__, static_folder='static')
-app.config['UPLOAD_FOLDER'] = 'uploads'
-
-if not os.path.exists(app.config['UPLOAD_FOLDER']):
-    os.makedirs(app.config['UPLOAD_FOLDER'])
-
-# Check if file is allowed for upload
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg'}
-
-@app.route('/')
-def reportGen():
-    report = {
-        "NT Measurement": "1.5 mm",
-        "Nasal Bone": "Present",
-        "Cisterna Magna": "Visible",
-        "Detected Structures": ["thalami", "midbrain", "nasal bone"],
-        "Down Syndrome Risk": "Low"
-    }
-    #image_path = "uploads/example.png"
-
-
-    return render_template('report.html',report=report,image_path=url_for('static', filename='uploads/' + filename))
 
 # Preprocess image for OCR
 def preprocess_image(image_path):
@@ -84,6 +63,7 @@ def split_into_unique_words(text):
 @app.route("/")
 def home():
     return render_template("index.html")
+
 
 
 # Scanner page route
@@ -128,6 +108,11 @@ def stores_page():
 def contact_page():
     return render_template("contact.html")
 
+@app.route('/report', methods=['GET'])
+def report_page():
+    return render_template("report.html")
+
+
 # Get coordinates from location name
 def get_coordinates(location):
     geocode_url = f"https://nominatim.openstreetmap.org/search?q={requests.utils.quote(location)}&format=json"
@@ -159,75 +144,126 @@ def fetch_nearby_medical_stores(lat, lon):
     except:
         return []
 
-# Upload file and analyze using YOLO
-# Report page (for GET navigation only)
-# Analyze uploaded image and run YOLOv8 inference
-@app.route("/report", methods=["POST"])
+#ultrasound analysis
+key_structures = {
+    0: "Thalami",
+    1: "Midbrain",
+    2: "Palate",
+    3: "4th Ventricle",
+    4: "Cisterna Magna",
+    5: "NT",
+    6: "Nasal Tip",
+    7: "Nasal Skin",
+    8: "Nasal Bone"
+}
+
+key_structure_names = list(key_structures.values())
+
+
+def calculate_nt_mm(normalized_height, image_height):
+    return round(normalized_height * image_height * 0.1, 2)
+
+
+@app.route('/')
+def index():
+    return render_template('report.html')
+
+
+@app.route('/analyze', methods=['POST'])
 def analyze():
-    if 'file' not in request.files:
+    if 'image' not in request.files:
         return redirect(request.url)
 
-    file = request.files['file']
-    if file and allowed_file(file.filename):
+    file = request.files['image']
+    if file.filename == '':
+        return redirect(request.url)
+
+    if file:
         filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
 
-        # Run YOLOv8 model inference
-        image_path, labels = yolo_inference_function(file_path)
-        print("Labels:", labels)  # debug
-        report_data= generate_ultrasound_report(labels)
-        print("Report:", report_data)  # debug
-        return render_template("report.html", image_path=image_path, labels=labels)
+        image_bgr = cv2.imread(filepath)
+        image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
+        image_height, image_width = image_rgb.shape[:2]
+
+        results = model.predict(image_rgb)[0]
+        boxes = results.boxes
+
+        detected_structures = set()
+        nt_measurement_mm = None
+
+        for box in boxes:
+            x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
+            conf = float(box.conf[0])
+            cls_id = int(box.cls[0])
+            class_name = key_structures.get(cls_id, f"Unknown ({cls_id})")
+
+            print(f"Detected {class_name} with confidence {conf:.2f}")
+
+            detected_structures.add(class_name)
+
+            cv2.rectangle(image_bgr, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            cv2.putText(image_bgr, class_name, (x1, y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+
+            if class_name.lower() == "nt":
+                box_height = y2 - y1
+                nt_measurement_mm = calculate_nt_mm(
+                    box_height / image_height, image_height)
+
+        risk = "High" if nt_measurement_mm and nt_measurement_mm > 3.0 else "Low" if nt_measurement_mm else "Unknown"
+
+        annotated_filename = "annotated_" + filename
+        annotated_path = os.path.join(app.config['UPLOAD_FOLDER'], annotated_filename)
+        cv2.imwrite(annotated_path, image_bgr)
+
+        structure_status = {name: ("Detected" if name in detected_structures else "Not Detected")
+                            for name in key_structure_names}
+
+        diagnostic_summary = ""
+        if nt_measurement_mm:
+            diagnostic_summary += f"Nuchal Translucency (NT) measured {nt_measurement_mm} mm. "
+            diagnostic_summary += "This is considered high risk for Down Syndrome. " if risk == "High" else "This is within normal limits. "
+        else:
+            diagnostic_summary += "Nuchal Translucency (NT) was not detected. "
+
+        if "Nasal Bone" in detected_structures:
+            diagnostic_summary += "Nasal bone is present. "
+        else:
+            diagnostic_summary += "Nasal bone is not detected, which could be an additional marker. "
+
+        if "Cisterna Magna" in detected_structures:
+            diagnostic_summary += "Cisterna Magna is visible."
+        else:
+            diagnostic_summary += "Cisterna Magna not detected. Further imaging may be needed."
+
+        result_data = {
+            "filename": annotated_filename,
+            "nt": f"{nt_measurement_mm} mm" if nt_measurement_mm else "Not Detected",
+            "risk": risk,
+            "structures": structure_status,
+            "summary": diagnostic_summary,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+
+        session['result_data'] = json.dumps(result_data)  # Save to session
+        return render_template("Genrepo.html", results=result_data)
 
 
+@app.route('/download/<filename>')
+def download_pdf(filename):
+    result_data = json.loads(session.get('result_data', '{}'))
+    result_data['filename'] = filename
 
-    return redirect(request.url)
-
-@app.route('/report', methods=['GET', 'POST'])
-def report():
-    if request.method == 'POST':
-        if 'image' not in request.files:
-            return "No file uploaded", 400
-        
-        file = request.files['image']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-
-            print("📁 File saved at:", filepath)
-
-            # Run YOLO model
-            results = model.predict(source=filepath)
-
-            # Extract labels
-            labels = [
-                {
-                    "name": r.names[r.boxes.cls[i].item()],
-                    "bbox": r.boxes.xyxy[i].tolist()
-                }
-                for r in results
-                for i in range(len(r.boxes.cls))
-            ]
-            report_data = generate_ultrasound_report(labels)
-            
-            image_path = url_for('static', filename='uploads/' + filename)
-
-            return render_template('report.html', report=report_data, image_path=url_for('static', filename='uploads/' + filename))
-           
-        return "Invalid file", 400
-
-    # GET request
-    return render_template('report.html', report=None, image_path=None)
+    html = render_template("Genrepo.html", results=result_data)
+    pdf = HTML(string=html, base_url=request.base_url).write_pdf()
+    return send_file(BytesIO(pdf), download_name="Genrepo.pdf", as_attachment=True)
 
 
- # Run the Flask app
 if __name__ == '__main__':
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
     app.run(debug=True)
 
-# Print all routes
-for rule in app.url_map.iter_rules():
-    print(rule)
 
-print("📝 Final report data:", report_data)
