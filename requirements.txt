@@ -1,15 +1,13 @@
 Flask==2.2.5
 Jinja2==3.1.2
-pytesseract==0.3.10
-Pillow==10.2.0
-requests==2.31.0
-ps_mem==3.14
-setuptools==77.0.3
-six==1.17.0
-opencv-python-headless==4.9.0.80
-weasyprint==61.2
-matplotlib==3.8.4
-ultralytics==8.1.25
+pytesseract==0.3.13
+Pillow==11.1.0
+requests==2.32.3
+opencv-python-headless==4.10.0.84
+weasyprint==65.1
+matplotlib==3.10.1
+ultralytics==8.3.101
 gunicorn==21.2.0
-numpy==1.26.4
+numpy==2.1.1
+Werkzeug==3.1.3
 
