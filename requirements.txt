@@ -6,5 +6,10 @@ requests==2.31.0
 ps_mem==3.14
 setuptools==77.0.3
 six==1.17.0
-gunicorn
+opencv-python-headless==4.9.0.80
+weasyprint==61.2
+matplotlib==3.8.4
+ultralytics==8.1.25
+gunicorn==21.2.0
+numpy==1.26.4
 
