@@ -8,4 +8,3 @@ pycairo==1.27.0
 PyGObject==3.50.0
 setuptools==77.0.3
 six==1.17.0
-bc6fb8e (render)
