@@ -22,10 +22,17 @@ import shutil
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
-model = YOLO("best.pt") 
+#model = YOLO("best.pt")
+model = None
+
 
 # Set the path for Tesseract OCR (Windows path example, modify accordingly)
-pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
+#pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
+
+@app.before_first_request
+def load_model():
+    global model
+    model = YOLO("best.pt")
 
 
 # Preprocess image for OCR
@@ -261,9 +268,9 @@ def download_pdf(filename):
     return send_file(BytesIO(pdf), download_name="Genrepo.pdf", as_attachment=True)
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
-        os.makedirs(app.config['UPLOAD_FOLDER'])
-    app.run(debug=True)
+       os.makedirs(app.config['UPLOAD_FOLDER'])
+   # app.run(debug=True)
 
 
