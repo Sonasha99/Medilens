@@ -25,32 +25,6 @@ MediLens 2 is a healthcare-focused web application designed to streamline medica
 
 ---
 
-## 📂 Project Structure
-
-```
-
-medilens-2/
-├── backend/                 # All backend logic lives here
-│   ├── server.js
-│   ├── routes/
-│   ├── controllers/
-│   └── config/
-│
-├── frontend/                # All frontend React files are here
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── App.js
-│   │   └── index.js
-│   └── tailwind.config.js
-│
-├── .gitignore
-├── README.md
-└── package.json
-
-````
-
 > 📌 Note: If both frontend and backend are in the same repo, you can run each part separately using `npm install` and `npm start` inside each folder.
 
 ---
