@@ -1,98 +1,474 @@
+/* Enhanced Medical Report Section */
 .report-section {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 3rem 2rem;
+    animation: fadeInUp 0.8s ease-out both;
+    position: relative;
+}
+
+/* Ensure body uses main.css background */
+body {
+    background: var(--primary-light) !important;
+    background-image: none !important;
+}
+
+.report-section h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+}
+
+.report-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
 }
 
 .upload-container {
-    margin: 2rem 0;
+    margin: 3rem 0;
+    background: var(--surface-color) !important;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md) !important;
+    overflow: hidden;
+    border: 2px solid var(--border-color) !important;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
-.upload-area {
-    border: 2px dashed var(--light-gray);
-    padding: 2rem;
-    text-align: center;
-    border-radius: 1rem;
-    cursor: pointer;
-    transition: border-color 0.3s;
+.upload-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-lg);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.upload-area:hover {
+.upload-container:hover::before {
+    opacity: 1;
+}
+
+.upload-container:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl), 0 0 30px rgba(37, 99, 235, 0.1);
     border-color: var(--primary-color);
 }
 
-.upload-area i {
-    font-size: 3rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
+.upload-area {
+    border: 3px dashed var(--primary-color) !important;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: var(--border-radius-lg);
+    background: var(--surface-color) !important;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.generate-button {
-    display: block;
+.upload-area::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
     width: 100%;
-    padding: 1rem;
-    margin-top: 1rem;
-    background-color: var(--primary-color);
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.upload-area:hover::before {
+    left: 100%;
+}
+
+.upload-area:hover {
+    border-color: var(--secondary-color) !important;
+    background: var(--surface-color) !important;
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg), 0 0 30px rgba(37, 99, 235, 0.2);
+}
+
+.upload-area i {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    transition: var(--transition);
+    animation: pulse 2s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+}
+
+.upload-area:hover i {
+    transform: scale(1.1);
+    color: var(--secondary-color);
+}
+
+.upload-area p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+}
+
+.upload-area input[type="file"] {
+    display: none;
+}
+
+/* Enhanced Generate Button */
+.generate-button {
+    width: 100%;
+    padding: 1.5rem 2rem;
+    background: var(--gradient-primary);
     color: white;
     border: none;
-    border-radius: 0.5rem;
-    font-weight: bold;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1.2rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    position: relative;
+    overflow: hidden;
+    margin-top: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.generate-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.generate-button:hover::before {
+    left: 100%;
 }
 
 .generate-button:hover:not(:disabled) {
-    background-color: var(--secondary-color);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl), 0 10px 30px rgba(37, 99, 235, 0.3);
 }
 
 .generate-button:disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
+    background: var(--text-secondary);
 }
 
+.generate-button:not(:disabled) {
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+/* Medical-themed Results Section */
 .results {
-    margin-top: 2rem;
-    padding: 2rem;
-    background: white;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 3rem;
+    padding: 3rem;
+    background: var(--surface-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.results::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
 }
 
 .report-analysis {
-    margin-top: 1rem;
+    margin-top: 2rem;
 }
 
 .analysis-item {
-    margin: 1rem 0;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(37, 99, 235, 0.05);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.3s ease;
 }
 
-.analysis-item ul {
-    margin-top: 0.5rem;
-    margin-left: 1.5rem;
+.analysis-item:hover {
+    background: rgba(37, 99, 235, 0.1);
+    transform: translateX(5px);
 }
 
-.analysis-item li {
-    margin-bottom: 0.25rem;
-}
-
-.result-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.action-button {
-    padding: 0.5rem 1rem;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
+.analysis-item h3 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.action-button:hover {
-    background-color: var(--secondary-color);
+.analysis-item h3::before {
+    content: '🔬';
+    font-size: 1.2rem;
 }
+
+.analysis-item ul {
+    margin-top: 1rem;
+    margin-left: 2rem;
+}
+
+.analysis-item li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    position: relative;
+    padding-left: 1rem;
+}
+
+.analysis-item li::before {
+    content: '•';
+    color: var(--primary-color);
+    font-weight: bold;
+    position: absolute;
+    left: -1rem;
+}
+
+/* Enhanced Action Buttons */
+.result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    justify-content: center;
+}
+
+.action-button {
+    padding: 1rem 2rem;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    min-width: 150px;
+    justify-content: center;
+}
+
+.action-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.action-button:hover::before {
+    left: 100%;
+}
+
+.action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg), 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.action-button i {
+    font-size: 1.1rem;
+}
+
+/* Medical-themed Loading States */
+.loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.loading-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(37, 99, 235, 0.2);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Medical-themed File Upload Animation */
+.file-upload-animation {
+    position: relative;
+    overflow: hidden;
+}
+
+.file-upload-animation::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.2), transparent);
+    animation: uploadShine 2s ease-in-out infinite;
+}
+
+@keyframes uploadShine {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
+}
+
+/* Medical-themed Success/Error States */
+.success-state {
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+    border-color: var(--success-color);
+}
+
+.error-state {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+    border-color: var(--error-color);
+}
+
+/* Medical-themed Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.02); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.02); }
+}
+
+/* Medical-themed Responsive Design */
+@media (max-width: 768px) {
+    .report-section {
+        padding: 2rem 1rem;
+    }
+    
+    .report-section h2 {
+        font-size: 2rem;
+    }
+    
+    .upload-area {
+        padding: 3rem 1.5rem;
+    }
+    
+    .upload-area i {
+        font-size: 3rem;
+    }
+    
+    .upload-area p {
+        font-size: 1rem;
+    }
+    
+    .generate-button {
+        padding: 1.25rem 1.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .results {
+        padding: 2rem 1.5rem;
+    }
+    
+    .result-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .action-button {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .report-section h2 {
+        font-size: 1.75rem;
+    }
+    
+    .upload-area {
+        padding: 2rem 1rem;
+    }
+    
+    .upload-area i {
+        font-size: 2.5rem;
+    }
+    
+    .generate-button {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .results {
+        padding: 1.5rem 1rem;
+    }
+}  

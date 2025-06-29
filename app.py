@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for,send_file,session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file, session
 import pytesseract
 import cv2
 import os
@@ -6,7 +6,7 @@ import numpy as np
 import requests
 import re
 from io import BytesIO
-from weasyprint import HTML
+# from weasyprint import HTML  # Removed to avoid import errors
 import matplotlib.pyplot as plt
 from werkzeug.utils import secure_filename
 from collections import OrderedDict
@@ -18,22 +18,15 @@ from PIL import Image
 import uuid
 import shutil
 
-
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
-#model = YOLO("best.pt")
 model = None
-
-
-# Set the path for Tesseract OCR (Windows path example, modify accordingly)
-#pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
 
 @app.before_first_request
 def load_model():
     global model
     model = YOLO("best.pt")
-
 
 # Preprocess image for OCR
 def preprocess_image(image_path):
@@ -46,7 +39,7 @@ def preprocess_image(image_path):
     thresh = cv2.adaptiveThreshold(
         blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
     )
-    kernel = np.ones((2,2), np.uint8)
+    kernel = np.ones((2, 2), np.uint8)
     processed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
     return processed
 
@@ -66,14 +59,10 @@ def split_into_unique_words(text):
     unique_words = list(OrderedDict.fromkeys(words))
     return unique_words
 
-# Index route
 @app.route("/")
 def home():
     return render_template("index.html")
 
-
-
-# Scanner page route
 @app.route("/scanner", methods=['GET', 'POST'])
 def scanner_page():
     result = None
@@ -91,7 +80,6 @@ def scanner_page():
             result = split_into_unique_words(extracted_text)
     return render_template('scanner.html', result=result)
 
-# Stores page route
 @app.route("/stores", methods=['GET', 'POST'])
 def stores_page():
     pharmacies = []
@@ -110,7 +98,6 @@ def stores_page():
             error = "Please enter a location."
     return render_template('stores.html', pharmacies=pharmacies, error=error)
 
-# Contact page route
 @app.route("/contact")
 def contact_page():
     return render_template("contact.html")
@@ -119,8 +106,34 @@ def contact_page():
 def report_page():
     return render_template("report.html")
 
+@app.route('/report/<filename>', methods=['GET'])
+def view_report(filename):
+    """View a specific report by filename"""
+    try:
+        # Check if the file exists
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if not os.path.exists(file_path):
+            return "Report not found", 404
+        
+        # Try to get result data from session or create default
+        result_data = session.get('result_data')
+        if result_data:
+            result_data = json.loads(result_data)
+        else:
+            # Create a default result structure
+            result_data = {
+                "filename": filename,
+                "nt": "Not Detected",
+                "risk": "Unknown",
+                "structures": {},
+                "summary": "Report data not available.",
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+        
+        return render_template("Genrepo.html", results=result_data)
+    except Exception as e:
+        return f"Error loading report: {str(e)}", 500
 
-# Get coordinates from location name
 def get_coordinates(location):
     geocode_url = f"https://nominatim.openstreetmap.org/search?q={requests.utils.quote(location)}&format=json"
     headers = {'User-Agent': 'Mozilla/5.0 (MyPharmacyApp/1.0)'}
@@ -130,7 +143,6 @@ def get_coordinates(location):
         return float(result["lat"]), float(result["lon"])
     return None, None
 
-# Fetch nearby medical stores using Overpass API
 def fetch_nearby_medical_stores(lat, lon):
     query = f"""
         [out:json];
@@ -151,7 +163,6 @@ def fetch_nearby_medical_stores(lat, lon):
     except:
         return []
 
-#ultrasound analysis
 key_structures = {
     0: "Thalami",
     1: "Midbrain",
@@ -166,111 +177,112 @@ key_structures = {
 
 key_structure_names = list(key_structures.values())
 
-
 def calculate_nt_mm(normalized_height, image_height):
     return round(normalized_height * image_height * 0.1, 2)
 
-
-@app.route('/')
-def index():
-    return render_template('report.html')
-
-
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    if 'image' not in request.files:
-        return redirect(request.url)
+    try:
+        if 'image' not in request.files:
+            return jsonify({"error": "No image file provided"}), 400
 
-    file = request.files['image']
-    if file.filename == '':
-        return redirect(request.url)
+        file = request.files['image']
+        if file.filename == '':
+            return jsonify({"error": "No file selected"}), 400
 
-    if file:
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
+        if file:
+            # Generate unique filename to avoid conflicts
+            file_extension = os.path.splitext(file.filename)[1]
+            unique_filename = str(uuid.uuid4()) + file_extension
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+            file.save(filepath)
 
-        image_bgr = cv2.imread(filepath)
-        image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-        image_height, image_width = image_rgb.shape[:2]
+            # Check if model is loaded
+            if model is None:
+                return jsonify({"error": "AI model not loaded. Please try again."}), 500
 
-        results = model.predict(image_rgb)[0]
-        boxes = results.boxes
+            image_bgr = cv2.imread(filepath)
+            if image_bgr is None:
+                return jsonify({"error": "Invalid image file"}), 400
+                
+            image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
+            image_height, image_width = image_rgb.shape[:2]
 
-        detected_structures = set()
-        nt_measurement_mm = None
+            results = model.predict(image_rgb)[0]
+            boxes = results.boxes
 
-        for box in boxes:
-            x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
-            conf = float(box.conf[0])
-            cls_id = int(box.cls[0])
-            class_name = key_structures.get(cls_id, f"Unknown ({cls_id})")
+            detected_structures = set()
+            nt_measurement_mm = None
 
-            print(f"Detected {class_name} with confidence {conf:.2f}")
+            for box in boxes:
+                x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
+                conf = float(box.conf[0])
+                cls_id = int(box.cls[0])
+                class_name = key_structures.get(cls_id, f"Unknown ({cls_id})")
 
-            detected_structures.add(class_name)
+                print(f"Detected {class_name} with confidence {conf:.2f}")
 
-            cv2.rectangle(image_bgr, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.putText(image_bgr, class_name, (x1, y1 - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+                detected_structures.add(class_name)
 
-            if class_name.lower() == "nt":
-                box_height = y2 - y1
-                nt_measurement_mm = calculate_nt_mm(
-                    box_height / image_height, image_height)
+                cv2.rectangle(image_bgr, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.putText(image_bgr, class_name, (x1, y1 - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
-        risk = "High" if nt_measurement_mm and nt_measurement_mm > 3.0 else "Low" if nt_measurement_mm else "Unknown"
+                if class_name.lower() == "nt":
+                    box_height = y2 - y1
+                    nt_measurement_mm = calculate_nt_mm(
+                        box_height / image_height, image_height)
 
-        annotated_filename = "annotated_" + filename
-        annotated_path = os.path.join(app.config['UPLOAD_FOLDER'], annotated_filename)
-        cv2.imwrite(annotated_path, image_bgr)
+            risk = "High" if nt_measurement_mm and nt_measurement_mm > 3.0 else "Low" if nt_measurement_mm else "Unknown"
 
-        structure_status = {name: ("Detected" if name in detected_structures else "Not Detected")
-                            for name in key_structure_names}
+            annotated_filename = "annotated_" + unique_filename
+            annotated_path = os.path.join(app.config['UPLOAD_FOLDER'], annotated_filename)
+            cv2.imwrite(annotated_path, image_bgr)
 
-        diagnostic_summary = ""
-        if nt_measurement_mm:
-            diagnostic_summary += f"Nuchal Translucency (NT) measured {nt_measurement_mm} mm. "
-            diagnostic_summary += "This is considered high risk for Down Syndrome. " if risk == "High" else "This is within normal limits. "
+            structure_status = {name: ("Detected" if name in detected_structures else "Not Detected")
+                                for name in key_structure_names}
+
+            diagnostic_summary = ""
+            if nt_measurement_mm:
+                diagnostic_summary += f"Nuchal Translucency (NT) measured {nt_measurement_mm} mm. "
+                diagnostic_summary += "This is considered high risk for Down Syndrome. " if risk == "High" else "This is within normal limits. "
+            else:
+                diagnostic_summary += "Nuchal Translucency (NT) was not detected. "
+
+            if "Nasal Bone" in detected_structures:
+                diagnostic_summary += "Nasal bone is present. "
+            else:
+                diagnostic_summary += "Nasal bone is not detected, which could be an additional marker. "
+
+            if "Cisterna Magna" in detected_structures:
+                diagnostic_summary += "Cisterna Magna is visible."
+            else:
+                diagnostic_summary += "Cisterna Magna not detected. Further imaging may be needed."
+
+            result_data = {
+                "filename": annotated_filename,
+                "nt": f"{nt_measurement_mm} mm" if nt_measurement_mm else "Not Detected",
+                "risk": risk,
+                "structures": structure_status,
+                "summary": diagnostic_summary,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+
+            session['result_data'] = json.dumps(result_data)
+            return render_template("Genrepo.html", results=result_data)
         else:
-            diagnostic_summary += "Nuchal Translucency (NT) was not detected. "
-
-        if "Nasal Bone" in detected_structures:
-            diagnostic_summary += "Nasal bone is present. "
-        else:
-            diagnostic_summary += "Nasal bone is not detected, which could be an additional marker. "
-
-        if "Cisterna Magna" in detected_structures:
-            diagnostic_summary += "Cisterna Magna is visible."
-        else:
-            diagnostic_summary += "Cisterna Magna not detected. Further imaging may be needed."
-
-        result_data = {
-            "filename": annotated_filename,
-            "nt": f"{nt_measurement_mm} mm" if nt_measurement_mm else "Not Detected",
-            "risk": risk,
-            "structures": structure_status,
-            "summary": diagnostic_summary,
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
-
-        session['result_data'] = json.dumps(result_data)  # Save to session
-        return render_template("Genrepo.html", results=result_data)
-
+            return jsonify({"error": "Invalid file"}), 400
+            
+    except Exception as e:
+        print(f"Error in analyze route: {str(e)}")
+        return jsonify({"error": f"An error occurred during analysis: {str(e)}"}), 500
 
 @app.route('/download/<filename>')
 def download_pdf(filename):
-    result_data = json.loads(session.get('result_data', '{}'))
-    result_data['filename'] = filename
+    # PDF generation removed due to WeasyPrint issues
+    return "PDF generation temporarily disabled (WeasyPrint not installed)."
 
-    html = render_template("Genrepo.html", results=result_data)
-    pdf = HTML(string=html, base_url=request.base_url).write_pdf()
-    return send_file(BytesIO(pdf), download_name="Genrepo.pdf", as_attachment=True)
-
-
-#if __name__ == '__main__':
+if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
-       os.makedirs(app.config['UPLOAD_FOLDER'])
-   # app.run(debug=True)
-
-
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+    app.run(debug=True)

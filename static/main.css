@@ -1,10 +1,25 @@
-/* Base styles and common elements */
+/* --- Strict Pink Medical Color Palette --- */
 :root {
-    --primary-color: #2563eb;
-    --secondary-color: #1d4ed8;
-    --background-color: #f8fafc;
-    --text-color: #1e293b;
-    --light-gray: #e2e8f0;
+    --primary-color: #FF5CA8;
+    --primary-hover: #E14C97;
+    --primary-light: #FFF0F6;
+    --accent-color: #FFB6D5;
+    --background-color: #FFFFFF;
+    --surface-color: #FFF0F6;
+    --text-color: #3A2C3A;
+    --text-secondary: #A38CA3;
+    --border-color: #FFB6D5;
+    --success-color: #4ADE80;
+    --error-color: #FF6B6B;
+    --shadow-sm: 0 1px 2px 0 rgba(255, 92, 168, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(255, 92, 168, 0.10), 0 2px 4px -2px rgba(255, 182, 213, 0.08);
+    --shadow-lg: 0 10px 15px -3px rgba(255, 92, 168, 0.10), 0 4px 6px -4px rgba(255, 182, 213, 0.08);
+    --shadow-xl: 0 20px 25px -5px rgba(255, 92, 168, 0.10), 0 8px 10px -6px rgba(255, 182, 213, 0.08);
+    --gradient-primary: linear-gradient(135deg, #FF5CA8 0%, #FFB6D5 100%);
+    --gradient-bg: linear-gradient(135deg, #FFFFFF 0%, #FFF0F6 100%);
+    --border-radius: 0.75rem;
+    --border-radius-lg: 1rem;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -13,27 +28,132 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: 'Inter', sans-serif;
-    line-height: 1.6;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.7;
     color: var(--text-color);
-    background-color: var(--background-color);
+    background: var(--primary-light) !important;
+    background-image: none !important;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stethoscope-icon svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
+
+/* Medical-themed floating animations */
+.medical-float {
+    position: absolute;
+    opacity: 0.10;
+    z-index: -1;
+    animation: medicalFloat 6s ease-in-out infinite;
+    color: var(--primary-color) !important;
+}
+
+.medical-float:nth-child(1) {
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.medical-float:nth-child(2) {
+    top: 20%;
+    right: 10%;
+    animation-delay: 2s;
+}
+
+.medical-float:nth-child(3) {
+    bottom: 30%;
+    left: 15%;
+    animation-delay: 4s;
+}
+
+@keyframes medicalFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+/* Stethoscope animation */
+.stethoscope {
+    position: absolute;
+    font-size: 2rem;
+    color: var(--primary-color) !important;
+    opacity: 0.10;
+    animation: stethoscopeBeat 2s ease-in-out infinite;
+}
+
+.stethoscope:nth-child(1) { top: 15%; left: 8%; animation-delay: 0s; }
+.stethoscope:nth-child(2) { top: 25%; right: 12%; animation-delay: 1s; }
+.stethoscope:nth-child(3) { bottom: 25%; left: 20%; animation-delay: 0.5s; }
+
+@keyframes stethoscopeBeat {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(5deg); }
+}
+
+/* Doctor icon animation */
+.doctor-icon {
+    position: absolute;
+    font-size: 1.5rem;
+    color: var(--primary-color) !important;
+    opacity: 0.10;
+    animation: doctorPulse 3s ease-in-out infinite;
+}
+
+.doctor-icon:nth-child(1) { top: 35%; right: 5%; animation-delay: 0s; }
+.doctor-icon:nth-child(2) { bottom: 15%; right: 25%; animation-delay: 1.5s; }
+
+@keyframes doctorPulse {
+    0%, 100% { transform: scale(1); opacity: 0.1; }
+    50% { transform: scale(1.2); opacity: 0.2; }
 }
 
 main {
-    margin-top: 4rem;
+    margin-top: 5rem;
     padding: 2rem;
     flex: 1;
+    position: relative;
+    animation: fadeInUp 0.6s ease-out;
 }
 
-/* Navbar */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Enhanced Medical Navbar */
 .navbar {
-    background-color: white;
+    background: linear-gradient(90deg, #ff5ca8 0%, #ff7eb3 100%);
+    color: #fff;
+    border-bottom: 2px solid var(--primary-light);
     padding: 1rem 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 12px 0 rgba(255, 92, 168, 0.10);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -41,51 +161,183 @@ main {
     width: 100%;
     top: 0;
     z-index: 1000;
+    transition: var(--transition);
+    overflow: visible;
+}
+
+.navbar::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 0; height: 60%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.05) 80%);
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 0 0 1.5rem 1.5rem;
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #fff;
+    background: none;
+    -webkit-text-fill-color: unset;
+    position: relative;
+    z-index: 2;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stethoscope-icon {
+    width: 24px !important;
+    height: 24px !important;
+    margin-left: 0.5rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+@keyframes logoPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.logo::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background: var(--gradient-primary);
+    transition: width 0.3s ease;
+}
+
+.logo:hover::after {
+    width: 100%;
 }
 
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 2.5rem;
+    align-items: center;
 }
 
 .nav-links a {
     text-decoration: none;
-    color: var(--text-color);
+    color: #fff;
     font-weight: 500;
-    transition: color 0.3s;
+    font-size: 0.95rem;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: var(--transition);
+}
+
+.nav-links a::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background: var(--gradient-primary);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: var(--primary-color);
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--accent-color);
 }
 
-/* Footer */
+.nav-links a:hover::before,
+.nav-links a.active::before {
+    width: 100%;
+}
+
+/* Mobile menu toggle */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: var(--transition);
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: var(--primary-color);
+    margin: 3px 0;
+    transition: var(--transition);
+    border-radius: 2px;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Compact Medical Footer */
 .footer {
-    background-color: white;
-    padding: 3rem 2rem;
+    background: var(--surface-color);
+    color: var(--text-secondary);
+    padding: 2rem 0 1rem; /* Removed horizontal padding */
     margin-top: auto;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    font-size: 0.9rem; /* Smaller font */
+    width: 100%; /* Ensure full width */
+    border-top: 1px solid var(--border-color);
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
 }
 
 .footer-content {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 2rem; /* Add padding to content instead */
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem; /* Reduced gap */
+    position: relative;
+    z-index: 1;
 }
 
 .footer-section h3 {
     color: var(--primary-color);
+    font-size: 1.1rem; /* Smaller heading */
     margin-bottom: 1rem;
+    font-weight: 600;
+    position: relative;
+}
+
+.footer-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: var(--primary-color);
+    border-radius: 1px;
 }
 
 .footer-section ul {
@@ -93,55 +345,319 @@ main {
 }
 
 .footer-section ul li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem; /* Reduced margin */
+    transition: var(--transition);
+}
+
+.footer-section ul li:hover {
+    transform: translateX(5px);
 }
 
 .footer-section a {
-    color: var(--text-color);
+    color: #D3D3D3;
     text-decoration: none;
-    transition: color 0.3s;
+    transition: var(--transition);
+    font-size: 0.85rem; /* Smaller font */
 }
 
 .footer-section a:hover {
     color: var(--primary-color);
+    text-decoration: underline;
 }
 
 .footer-bottom {
     text-align: center;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--light-gray);
+    margin-top: 1.5rem; /* Reduced margin */
+    padding: 1rem 2rem 0; /* Add horizontal padding */
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-secondary);
+    font-size: 0.8rem; /* Smaller font */
+    width: 100%; /* Ensure full width */
 }
 
 .footer-social {
     display: flex;
     gap: 1rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem; /* Reduced margin */
 }
 
 .footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px; /* Smaller size */
+    height: 35px; /* Smaller size */
+    background: rgba(255, 182, 193, 0.2);
+    border-radius: 50%;
+    transition: var(--transition);
+    font-size: 1rem; /* Smaller icon */
     color: var(--primary-color);
-    font-size: 1.5rem;
-    transition: color 0.3s;
 }
 
 .footer-social a:hover {
-    color: var(--secondary-color);
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Medical-themed utility classes */
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+}
+
+.gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.floating-animation {
+    animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.pulse-animation {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Medical heartbeat animation */
+.heartbeat {
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.1); }
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-    .nav-links {
-        display: none;
-    }
-    
+@media (max-width: 1024px) {
     .footer-content {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 2rem;
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .nav-links.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .nav-links li {
+        margin: 1rem 0;
+        text-align: center;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .footer-section h3::after {
+        width: 25px;
+    }
+
+    main {
+        padding: 1rem;
+        margin-top: 4rem;
     }
 }
 
 @media (max-width: 480px) {
-    .footer-content {
-        grid-template-columns: 1fr;
+    .logo {
+        font-size: 1.5rem;
     }
+
+    .footer {
+        padding: 1.5rem 1rem 0.5rem;
+    }
+}
+
+/* Light Theme Override */
+@media (prefers-color-scheme: light) {
+    :root {
+        --background-color: #ffffff;
+        --surface-color: #f8f9fa;
+        --text-color: #495057;
+        --text-secondary: #6c757d;
+    }
+
+    .navbar {
+        background: rgba(248, 249, 250, 0.95);
+        border-bottom-color: #dee2e6;
+    }
+}
+
+/* --- Hero Section Pink Highlight --- */
+.hero-section {
+    position: relative;
+    background: var(--background-color);
+    max-width: 900px;
+    margin: 3.5rem auto 2.5rem auto;
+    padding: 4rem 2.5rem 3rem 2.5rem;
+    border-radius: 2.5rem;
+    box-shadow: 0 8px 32px 0 rgba(255, 92, 168, 0.10), 0 1.5px 8px 0 rgba(255,182,213,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    animation: fadeInUp 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+.hero-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 80%;
+    background: radial-gradient(circle, #ffb6c1 0%, #ffe4e8 60%, transparent 100%);
+    filter: blur(60px);
+    opacity: 0.45;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+
+.hero-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.2rem;
+    color: var(--primary-color);
+    z-index: 1;
+    filter: drop-shadow(0 2px 8px #ffe4e8);
+    animation: heartbeat 1.8s infinite;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin-bottom: 1.2rem;
+    letter-spacing: -1px;
+    z-index: 1;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-color);
+    margin-bottom: 2.2rem;
+    max-width: 600px;
+    z-index: 1;
+    opacity: 0.85;
+}
+
+.hero-btn {
+    display: inline-block;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 600;
+    padding: 0.95rem 2.5rem;
+    border-radius: 2rem;
+    box-shadow: 0 4px 16px 0 rgba(255, 182, 193, 0.18);
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    z-index: 1;
+}
+.hero-btn:hover {
+    background: var(--primary-hover);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 8px 32px 0 rgba(255, 182, 193, 0.22);
+}
+
+.hero-btn[style*="background: #fff"] {
+    color: var(--primary-color) !important;
+    border: 2px solid var(--primary-color) !important;
+}
+
+@media (max-width: 600px) {
+    .hero-section {
+        padding: 2rem 0.5rem 1.5rem 0.5rem;
+        border-radius: 1.2rem;
+    }
+    .hero-title {
+        font-size: 2.1rem;
+    }
+    .hero-icon {
+        font-size: 2.2rem;
+    }
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    .hero-btn {
+        font-size: 1rem;
+        padding: 0.7rem 1.5rem;
+    }
+}
+
+main, .feature-card, .card, .report-container, .glassmorphism {
+    background: var(--surface-color) !important;
+    color: var(--text-color) !important;
+    box-shadow: var(--shadow-md);
+}
+
+.feature-card i, .footer-social a, .footer-social a:hover {
+    color: var(--primary-color) !important;
+}
+
+input, textarea, select {
+    background: #fff;
+    border: 1.5px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+input:focus, textarea:focus, select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+}
+::-webkit-scrollbar-track {
+    background: var(--primary-light);
 }

@@ -6,101 +6,210 @@
     <title>MediLens Assistant - AI-Powered Healthcare Solutions</title>
     <link rel="stylesheet" href="/static/main.css" />
     <link rel="stylesheet" href="/static/home.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+      body {
+        background-color: #fff5f7;
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+      }
+      .medical-float, .stethoscope, .doctor-icon {
+        position: absolute;
+        font-size: 24px;
+        animation: float 6s ease-in-out infinite;
+        opacity: 0.5;
+      }
+      @keyframes float {
+        0%   { transform: translateY(0px); }
+        50%  { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
+      }
+      .navbar {
+        background-color: #ff5ca8;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+      }
+      .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 1.5rem;
+      }
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .footer {
+        background-color: #ff5ca8;
+        color: white;
+        padding: 3rem 2rem;
+        margin-top: 2rem;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .footer-section h3 {
+        margin-bottom: 1rem;
+      }
+      .footer-section ul {
+        list-style: none;
+        padding: 0;
+      }
+      .footer-section ul li {
+        margin-bottom: 0.5rem;
+      }
+      .footer-section a {
+        color: white;
+        text-decoration: none;
+      }
+      .footer-bottom {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+      }
+    </style>
   </head>
   <body>
+    <div class="medical-float">🩺</div>
+    <div class="medical-float">💊</div>
+    <div class="medical-float">🏥</div>
+    <div class="stethoscope">🩺</div>
+    <div class="stethoscope">🩺</div>
+    <div class="stethoscope">🩺</div>
+    <div class="doctor-icon">👨‍⚕️</div>
+    <div class="doctor-icon">👩‍⚕️</div>
     <nav class="navbar">
-      <div class="logo">MediLens</div>
+      <div class="logo">
+        MediLens
+        <span class="stethoscope-icon">
+          <svg width="24" height="24" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M30 15 C20 15, 20 30, 30 35" stroke="#FF5CA8" stroke-width="3" stroke-linecap="round"/>
+            <path d="M90 15 C100 15, 100 30, 90 35" stroke="#FF5CA8" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="30" cy="15" r="3" fill="#FFB6D5"/>
+            <circle cx="90" cy="15" r="3" fill="#FFB6D5"/>
+            <path d="M30 35 C50 50, 70 50, 90 35" stroke="#FF5CA8" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M60 50 L60 80" stroke="#FF5CA8" stroke-width="3" stroke-linecap="round"/>
+            <path d="M60 80 C40 95, 40 105, 60 110" stroke="#FF5CA8" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <circle cx="60" cy="110" r="6" fill="#FF5CA8" stroke="#FF5CA8" stroke-width="2"/>
+            <circle cx="60" cy="110" r="3" fill="white"/>
+          </svg>
+        </span>
+      </div>
       <ul class="nav-links">
-        <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
-        <li>
-          <a href="{{ url_for('scanner_page') }}">Prescription Scanner</a>
-        </li>
-
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('scanner_page') }}">Prescription Scanner</a></li>
         <li><a href="{{ url_for('report_page') }}">Report Generation</a></li>
         <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
         <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
       </ul>
     </nav>
-
-    <main>
-      <section class="hero">
-        <div class="hero-content">
-          <h1>AI-Powered Healthcare Solutions</h1>
-          <p>
-            Revolutionizing healthcare with advanced AI technology for
-            prescription scanning, report generation, and medical store locator
-            services.
-          </p>
-          <a href="scanner.html" class="cta-button">Get Started</a>
-        </div>
-      </section>
-
-      <section class="features">
-        <div class="feature-card">
-          <i class="fas fa-prescription"></i>
-          <h3>Prescription Scanner</h3>
-          <p>Upload and interpret prescriptions instantly with AI technology</p>
-        </div>
-        <div class="feature-card">
-          <i class="fas fa-file-medical-alt"></i>
-          <h3>Report Generation</h3>
-          <p>Generate detailed medical reports with AI analysis</p>
-        </div>
-        <div class="feature-card">
-          <i class="fas fa-clinic-medical"></i>
-          <h3>Store Locator</h3>
-          <p>Find nearby medical stores and check medicine availability</p>
-        </div>
-      </section>
-    </main>
-
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-illustration">
+        <!-- Doctor SVG -->
+        <svg width="220" height="340" viewBox="0 0 220 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Shadow -->
+          <ellipse cx="110" cy="325" rx="60" ry="12" fill="#FFB6D5" fill-opacity="0.18"/>
+          <!-- Body -->
+          <rect x="80" y="120" width="60" height="120" rx="28" fill="#FFF0F6"/>
+          <rect x="85" y="140" width="50" height="100" rx="22" fill="#fff" stroke="#FFB6D5" stroke-width="2"/>
+          <rect x="60" y="110" width="20" height="70" rx="10" fill="#fff" stroke="#FFB6D5" stroke-width="2" transform="rotate(-25 70 145)"/>
+          <ellipse cx="58" cy="110" rx="8" ry="10" fill="#FFB6D5"/>
+          <ellipse cx="52" cy="104" rx="2.5" ry="5" fill="#FFB6D5"/>
+          <ellipse cx="56" cy="100" rx="2.5" ry="5" fill="#FFB6D5"/>
+          <ellipse cx="60" cy="98" rx="2.5" ry="5" fill="#FFB6D5"/>
+          <ellipse cx="64" cy="100" rx="2.5" ry="5" fill="#FFB6D5"/>
+          <rect x="150" y="150" width="20" height="70" rx="10" fill="#fff" stroke="#FFB6D5" stroke-width="2" transform="rotate(15 160 185)"/>
+          <ellipse cx="170" cy="220" rx="8" ry="10" fill="#FFB6D5"/>
+          <rect x="165" y="185" width="18" height="28" rx="3" fill="#FFB6D5" stroke="#FF5CA8" stroke-width="2"/>
+          <rect x="170" y="190" width="8" height="2" rx="1" fill="#fff"/>
+          <rect x="170" y="195" width="12" height="2" rx="1" fill="#fff"/>
+          <rect x="170" y="200" width="10" height="2" rx="1" fill="#fff"/>
+          <rect x="90" y="240" width="12" height="60" rx="6" fill="#FFB6D5"/>
+          <rect x="118" y="240" width="12" height="60" rx="6" fill="#FFB6D5"/>
+          <ellipse cx="96" cy="305" rx="10" ry="6" fill="#FF5CA8"/>
+          <ellipse cx="124" cy="305" rx="10" ry="6" fill="#FF5CA8"/>
+          <ellipse cx="110" cy="90" rx="28" ry="32" fill="#FFF0F6"/>
+          <ellipse cx="110" cy="80" rx="16" ry="18" fill="#fff"/>
+          <ellipse cx="110" cy="80" rx="10" ry="11" fill="#FFB6D5" fill-opacity="0.18"/>
+          <ellipse cx="110" cy="80" rx="6" ry="6.5" fill="#FF5CA8"/>
+          <ellipse cx="110" cy="80" rx="3" ry="3.5" fill="#fff"/>
+          <ellipse cx="106" cy="78" rx="1.5" ry="2" fill="#3A2C3A"/>
+          <ellipse cx="114" cy="78" rx="1.5" ry="2" fill="#3A2C3A"/>
+          <path d="M107 85 Q110 89 113 85" stroke="#FF5CA8" stroke-width="2" fill="none"/>
+          <path d="M110 110 Q110 130 130 130" stroke="#FF5CA8" stroke-width="2" fill="none"/>
+          <circle cx="130" cy="130" r="4" fill="#FF5CA8"/>
+        </svg>
+      </div>
+      <div class="hero-text-content">
+        <h1 class="hero-heading-animate">AI-Powered Healthcare Solutions</h1>
+        <p>
+          Revolutionizing healthcare with advanced AI for prescription scanning,
+          report generation, and medical store locator services.
+        </p>
+        <a href="#" class="cta-button">Get Started</a>
+      </div>
+    </section>
+    <!-- Feature Cards -->
+    <section class="features">
+      <div class="feature-card">
+        <i class="fas fa-prescription"></i>
+        <h3>Prescription Scanner</h3>
+        <p>Upload and interpret prescriptions instantly with AI.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-file-medical-alt"></i>
+        <h3>Report Generation</h3>
+        <p>Generate detailed medical reports through intelligent analysis.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-clinic-medical"></i>
+        <h3>Store Locator</h3>
+        <p>Find nearby medical stores and check availability.</p>
+      </div>
+    </section>
     <footer class="footer">
       <div class="footer-content">
         <div class="footer-section">
           <h3>Quick Links</h3>
           <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="scanner.html">Prescription Scanner</a></li>
-            <li><a href="report.html">Report Generation</a></li>
-            <li><a href="stores.html">Medical Stores</a></li>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Scanner</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Stores</a></li>
           </ul>
         </div>
         <div class="footer-section">
           <h3>Services</h3>
           <ul>
             <li><a href="#">AI Analysis</a></li>
-            <li><a href="#">Medical Reports</a></li>
+            <li><a href="#">Report Generator</a></li>
             <li><a href="#">Store Locator</a></li>
-            <li><a href="#">Healthcare Support</a></li>
           </ul>
         </div>
         <div class="footer-section">
           <h3>Contact</h3>
           <ul>
-            <li>Email: support@medilens-assistant.com</li>
-            <li>Phone: +1 (555) 123-4567</li>
-            <li>Address: 123 Healthcare Ave</li>
+            <li>Email: support@medilens.com</li>
+            <li>Phone: +91 9876543210</li>
+            <li>Address: AI Health Tech, India</li>
           </ul>
         </div>
         <div class="footer-section">
           <h3>Follow Us</h3>
-          <div class="footer-social">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-linkedin"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-          </div>
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2024 MedAI Assistant. All rights reserved.</p>
+        <p>© 2025 MediLens. All rights reserved.</p>
       </div>
     </footer>
-
-    <script src="main.js"></script>
   </body>
 </html>

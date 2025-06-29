@@ -24,6 +24,12 @@ MediLens 2 is a healthcare-focused web application designed to streamline medica
 - **Deployment:** Render / Vercel / Netlify
 
 ---
+## file location 
+1.app.py, detect.py, inference.py → This is a Flask (Python) backend project.
+2.package.json → Suggests there might be some Node.js/JavaScript frontend or UI dependency, but it's in the same folder as the Python code.
+3.requirements.txt → Confirms this is primarily a Python project.
+4.vercel.json, render.yaml → Deployment configs (Vercel likely for frontend/API, Render for backend).
+
 
 > 📌 Note: If both frontend and backend are in the same repo, you can run each part separately using `npm install` and `npm start` inside each folder.
 

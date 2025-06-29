@@ -3,48 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Stores - MedAI Assistant</title>
+    <title>Medical Stores - MediLens</title>
     <link rel="stylesheet" href="/static/main.css">
     <link rel="stylesheet" href="/static/stores.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+      body {
+        background-color: #fff5f7;
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+      }
+      .navbar {
+        background-color: #ff5ca8;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+      }
+      .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 1.5rem;
+      }
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .footer {
+        background-color: #ff5ca8;
+        color: white;
+        padding: 3rem 2rem;
+        margin-top: 2rem;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .footer-section h3 {
+        margin-bottom: 1rem;
+      }
+      .footer-section ul {
+        list-style: none;
+        padding: 0;
+      }
+      .footer-section ul li {
+        margin-bottom: 0.5rem;
+      }
+      .footer-section a {
+        color: white;
+        text-decoration: none;
+      }
+      .footer-bottom {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+      }
+    </style>
 </head>
 <body>
+    <div class="medical-float">🏥</div>
+    <div class="medical-float">💊</div>
+    <div class="medical-float">🏪</div>
+    <div class="stethoscope">🩺</div>
+    <div class="stethoscope">🩺</div>
+    <div class="doctor-icon">👨‍⚕️</div>
     <nav class="navbar">
         <div class="logo">MediLens</div>
         <ul class="nav-links">
-        <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
-        <li><a href="{{ url_for('scanner_page') }}">Prescription Scanner</a></li>
-        <li><a href="report.html">Report Generation</a></li>
-        <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
-        <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('scanner_page') }}">Prescription Scanner</a></li>
+            <li><a href="{{ url_for('report_page') }}">Report Generation</a></li>
+            <li><a href="{{ url_for('stores_page') }}" class="active">Medical Stores</a></li>
+            <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
         </ul>
     </nav>
-
-
-
-
-
-   <!--  <form id="locationForm">
-        <input type="text" id="location" placeholder="Enter Locality (e.g., Connaught Place, Delhi)" required>
-        <button type="submit">Find Stores</button>
-    </form> -->
-
-
     <main>
         <section class="stores-section">
-            <h2>Find Nearby Medical Stores</h2>
+            <h2 style="text-align:center; font-size:2.5rem; font-weight:600; margin-bottom:1rem; color:#ff5ca8;"><i class="fas fa-store-medical" style="color:#ff5ca8; margin-right:0.5rem;"></i>Find Nearby Medical Stores</h2>
             <div class="search-container">
                 <div class="search-box">
-
                     <form method="POST">
-                    <input type="text" name="location" id="locationInput" placeholder="Enter your location" value="{{ request.form.location }}">
-                    <button type="submit"> Search </button>
+                        <input type="text" name="location" id="locationInput" placeholder="Enter your location" value="{{ request.form.location }}">
+                        <button type="submit">Search</button>
                     </form>
-
                 </div>
-
                 <div class="filters">
                     <select id="storeType">
                         <option value="all">All Stores</option>
@@ -59,16 +106,13 @@
                     </select>
                 </div>
             </div>
-            
             <div class="stores-container">
-                <div class="stores-list" id="storesList">  
-                        
+                <div class="stores-list" id="storesList">
                     {% if error %}
                         <p class="error">{{ error }}</p>
                     {% endif %}
-                
                     {% if pharmacies %}
-                        <h2>Nearby Pharmacies:</h2>
+                        <h3>Nearby Pharmacies:</h3>
                         <ul>
                             {% for pharmacy in pharmacies %}
                                 <li>
@@ -78,27 +122,23 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-            
-            </div>
-                
+                </div>
                 <div class="stores-map" id="storesMap">
                     <!-- Map will be loaded here -->
                 </div>
             </div>
         </section>
     </main>
-
-   
-
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="scanner.html">Prescription Scanner</a></li>
-                    <li><a href="report.html">Report Generation</a></li>
-                    <li><a href="stores.html">Medical Stores</a></li>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('scanner_page') }}">Prescription Scanner</a></li>
+                    <li><a href="{{ url_for('report_page') }}">Report Generation</a></li>
+                    <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
+                    <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -113,9 +153,9 @@
             <div class="footer-section">
                 <h3>Contact</h3>
                 <ul>
-                    <li>Email: support@medai-assistant.com</li>
-                    <li>Phone: +1 (555) 123-4567</li>
-                    <li>Address: 123 Healthcare Ave</li>
+                    <li>Email: support@medilens.com</li>
+                    <li>Phone: +91 9876543210</li>
+                    <li>Address: AI Health Tech, India</li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -129,43 +169,30 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 MedAI Assistant. All rights reserved.</p>
+            <p>&copy; 2025 MediLens. All rights reserved.</p>
         </div>
     </footer>
-
-    <script src="stores.js"></script>
-
+    <script src="/static/stores.js"></script>
     <script>
         {% if pharmacies %}
             var pharmacies = {{ pharmacies | tojson | safe }};
-    
             if (pharmacies.length > 0) {
                 var first = pharmacies[0];
-    
-                // Initialize Leaflet Map
                 var map = L.map('storesMap').setView([first.lat, first.lon], 14);
-    
-                // Add OpenStreetMap tiles
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '© OpenStreetMap'
                 }).addTo(map);
-    
-                // Add pharmacy markers
                 pharmacies.forEach(store => {
                     var marker = L.marker([store.lat, store.lon]).addTo(map);
                     marker.bindPopup(`<b>${store.name}</b>`).openPopup();
                 });
-    
             } else {
                 console.log("No pharmacies found.");
             }
         {% else %}
             console.log("Pharmacies data not available.");
         {% endif %}
-        
     </script>
-    
-
 </body>
 </html>
