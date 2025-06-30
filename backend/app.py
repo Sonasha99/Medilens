@@ -20,13 +20,13 @@ import shutil
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = './../static/uploads'
 model = None
 
 @app.before_first_request
 def load_model():
     global model
-    model = YOLO("best.pt")
+    model = YOLO("./../best.pt")
 
 # Preprocess image for OCR
 def preprocess_image(image_path):
