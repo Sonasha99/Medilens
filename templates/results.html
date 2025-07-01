@@ -133,7 +133,7 @@
       <div class="card-body text-center">
         {% if annotated_image %}
         <img
-          src="{{ url_for('download_report', filename=annotated_image) }}"
+          src="{{ annotated_image_url }}"
           class="img-fluid rounded"
           alt="Annotated ultrasound image"
           style="max-height: 500px"
