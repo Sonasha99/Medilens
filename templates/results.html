@@ -1,0 +1,213 @@
+<!-- templates/results.html -->
+{% extends "base.html" %} {% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2><i class="fas fa-chart-line"></i> Analysis Results</h2>
+      <div>
+        <a
+          href="{{ url_for('download_report', filename=pdf_filename) }}"
+          class="btn btn-success"
+        >
+          <i class="fas fa-download"></i> Download PDF Report
+        </a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+          <i class="fas fa-plus"></i> New Analysis
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Risk Assessment Card -->
+  <div class="col-lg-6">
+    <div class="card results-card">
+      <div class="card-header bg-primary text-white">
+        <h5><i class="fas fa-exclamation-triangle"></i> Risk Assessment</h5>
+      </div>
+      <div class="card-body">
+        {% set nt = analysis_results.nt_measurement_mm %} {% if nt is not none
+        %} {% if nt < 2.5 %} {% set risk_class = "risk-low" %} {% set risk_badge
+        = "LOW RISK" %} {% set badge_class = "bg-success" %} {% elif nt < 3.5 %}
+        {% set risk_class = "risk-moderate" %} {% set risk_badge = "MODERATE
+        RISK" %} {% set badge_class = "bg-warning" %} {% else %} {% set
+        risk_class = "risk-high" %} {% set risk_badge = "HIGH RISK" %} {% set
+        badge_class = "bg-danger" %} {% endif %}
+
+        <div class="alert {{ risk_class }}">
+          <h6><strong>Nuchal Translucency: {{ nt }} mm</strong></h6>
+          <p class="mb-1">
+            Risk Level:
+            <span class="badge {{ badge_class }}">{{ risk_badge }}</span>
+          </p>
+          <small>Normal range: &lt;2.5 mm</small>
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+          <h6>NT Measurement: Not detected</h6>
+          <p class="mb-0">Consider repeat scan for proper assessment</p>
+        </div>
+        {% endif %}
+
+        <h6 class="mt-3">Summary Statistics:</h6>
+        <ul class="list-unstyled">
+          <li>
+            <strong>Structures Detected:</strong> {{
+            summary.detection_summary.total_structures_detected }}/9
+          </li>
+          <li>
+            <strong>Average Confidence:</strong> {{
+            "%.1f"|format(summary.detection_summary.average_confidence * 100)
+            }}%
+          </li>
+          <li>
+            <strong>Analysis Time:</strong> {{ analysis_results.timestamp }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Structure Detection Card -->
+  <div class="col-lg-6">
+    <div class="card results-card">
+      <div class="card-header bg-info text-white">
+        <h5><i class="fas fa-search"></i> Structure Detection</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Structure</th>
+                <th>Status</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for structure in ['NT', 'Nasal Bone', 'Nasal Tip', 'Palate',
+              'Thalami', 'Midbrain', '4th Ventricle', 'Cisterna Magna'] %}
+              <tr>
+                <td>{{ structure }}</td>
+                <td>
+                  {% if structure in analysis_results.detected_structures %}
+                  <i class="fas fa-check structure-detected"></i> Detected {%
+                  else %}
+                  <i class="fas fa-times structure-not-detected"></i> Not
+                  Detected {% endif %}
+                </td>
+                <td>
+                  {% if structure in analysis_results.detection_confidences and
+                  analysis_results.detection_confidences[structure] is not none
+                  %} {% set conf =
+                  analysis_results.detection_confidences[structure] %} {% if
+                  conf > 0.8 %} {% set conf_class = "confidence-high bg-success"
+                  %} {% elif conf > 0.5 %} {% set conf_class = "confidence-mid
+                  bg-warning" %} {% else %} {% set conf_class = "confidence-low
+                  bg-danger" %} {% endif %}
+                  <span class="badge {{ conf_class }}">
+                    {{ "%.1f"|format(conf * 100) }}%
+                  </span>
+                  {% else %}
+                  <span class="text-muted">N/A</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Annotated Image -->
+  <div class="col-lg-8">
+    <div class="card results-card">
+      <div class="card-header bg-secondary text-white">
+        <h5><i class="fas fa-image"></i> Annotated Image</h5>
+      </div>
+      <div class="card-body text-center">
+        {% if annotated_image %}
+        <img
+          src="{{ url_for('download_report', filename=annotated_image) }}"
+          class="img-fluid rounded"
+          alt="Annotated ultrasound image"
+          style="max-height: 500px"
+        />
+        <p class="mt-2 text-muted">
+          <small
+            >Green boxes: High confidence detections | Yellow boxes: Moderate
+            confidence</small
+          >
+        </p>
+        {% else %}
+        <p class="text-muted">Annotated image not available</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Findings -->
+  <div class="col-lg-4">
+    <div class="card results-card">
+      <div class="card-header bg-warning text-dark">
+        <h5><i class="fas fa-clipboard-list"></i> Key Findings</h5>
+      </div>
+      <div class="card-body">
+        <h6>Clinical Significance:</h6>
+        <ul class="list-unstyled">
+          {% if 'NT' in analysis_results.detected_structures %}
+          <li>
+            <i class="fas fa-check text-success"></i> NT measurement available
+            for risk assessment
+          </li>
+          {% else %}
+          <li>
+            <i class="fas fa-exclamation text-warning"></i> NT not clearly
+            visible - may need repeat scan
+          </li>
+          {% endif %} {% if 'Nasal Bone' in analysis_results.detected_structures
+          %}
+          <li>
+            <i class="fas fa-check text-success"></i> Nasal bone present -
+            reassuring finding
+          </li>
+          {% else %}
+          <li>
+            <i class="fas fa-exclamation text-warning"></i> Nasal bone not
+            clearly visible
+          </li>
+          {% endif %} {% if 'Thalami' in analysis_results.detected_structures
+          and 'Midbrain' in analysis_results.detected_structures %}
+          <li>
+            <i class="fas fa-check text-success"></i> Brain structures
+            adequately visualized
+          </li>
+          {% else %}
+          <li>
+            <i class="fas fa-exclamation text-warning"></i> Some brain
+            structures not optimally visualized
+          </li>
+          {% endif %}
+        </ul>
+
+        <div class="mt-3">
+          <h6>Recommendations:</h6>
+          <ul class="small">
+            <li>Review complete PDF report for detailed analysis</li>
+            <li>Discuss findings with healthcare provider</li>
+            {% if nt is not none and nt > 3.0 %}
+            <li><strong>Consider genetic counseling consultation</strong></li>
+            {% endif %}
+            <li>Follow routine antenatal care schedule</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,379 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fetal Ultrasound Analysis - MediLens</title>
-  <link rel="stylesheet" href="/static/main.css">
-  <link rel="stylesheet" href="/static/report.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    :root {
-      --primary-color: #FF5CA8;
-      --primary-hover: #E14C97;
-      --primary-light: #FFF0F6;
-      --accent-color: #FFB6D5;
-      --background-color: #FFFFFF;
-      --surface-color: #FFF0F6;
-      --text-color: #3A2C3A;
-      --text-secondary: #A38CA3;
-      --border-color: #FFB6D5;
-      --success-color: #4ADE80;
-      --error-color: #FF6B6B;
-      --shadow-sm: 0 1px 2px 0 rgba(255, 92, 168, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(255, 92, 168, 0.10), 0 2px 4px -2px rgba(255, 182, 213, 0.08);
-      --shadow-lg: 0 10px 15px -3px rgba(255, 92, 168, 0.10), 0 4px 6px -4px rgba(255, 182, 213, 0.08);
-      --border-radius: 0.75rem;
-      --border-radius-lg: 1rem;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetal Ultrasound Analysis - MediLens</title>
+    <link rel="stylesheet" href="/static/main.css" />
+    <link rel="stylesheet" href="/static/report.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --primary-color: #ff5ca8;
+        --primary-hover: #e14c97;
+        --primary-light: #fff0f6;
+        --accent-color: #ffb6d5;
+        --background-color: #ffffff;
+        --surface-color: #fff0f6;
+        --text-color: #3a2c3a;
+        --text-secondary: #a38ca3;
+        --border-color: #ffb6d5;
+        --success-color: #4ade80;
+        --error-color: #ff6b6b;
+        --shadow-sm: 0 1px 2px 0 rgba(255, 92, 168, 0.05);
+        --shadow-md:
+          0 4px 6px -1px rgba(255, 92, 168, 0.1),
+          0 2px 4px -2px rgba(255, 182, 213, 0.08);
+        --shadow-lg:
+          0 10px 15px -3px rgba(255, 92, 168, 0.1),
+          0 4px 6px -4px rgba(255, 182, 213, 0.08);
+        --border-radius: 0.75rem;
+        --border-radius-lg: 1rem;
+      }
 
-    body {
-      background-color: #fff5f7;
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-color);
-      line-height: 1.6;
-    }
+      body {
+        background-color: #fff5f7;
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        color: var(--text-color);
+        line-height: 1.6;
+      }
 
-    .navbar {
-      background-color: #ff5ca8;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-      box-shadow: var(--shadow-md);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .nav-links {
-      list-style: none;
-      display: flex;
-      gap: 2rem;
-      margin: 0;
-      padding: 0;
-    }
-
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      padding: 0.5rem 1rem;
-      border-radius: var(--border-radius);
-      transition: all 0.3s ease;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .report-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
-
-    .report-section h2 {
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--primary-color);
-    }
-
-    .upload-container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .upload-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2.5rem 2rem;
-      border: 3px dashed var(--primary-color);
-      border-radius: var(--border-radius-lg);
-      background: var(--primary-light);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-bottom: 2rem;
-    }
-
-    .upload-area:hover {
-      border-color: var(--primary-hover);
-      background: var(--surface-color);
-      transform: translateY(-2px);
-    }
-
-    .upload-area i {
-      font-size: 3rem;
-      color: var(--primary-color);
-      margin-bottom: 1rem;
-    }
-
-    .upload-area input[type="file"] {
-      display: none;
-    }
-
-    .generate-button {
-      width: 100%;
-      padding: 1rem 2rem;
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: var(--border-radius);
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .generate-button:hover:not(:disabled) {
-      background: var(--primary-hover);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .generate-button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .loading-spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top: 2px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .footer {
-      background-color: #ff5ca8;
-      color: white;
-      padding: 2rem;
-      margin-top: 4rem;
-    }
-
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-    }
-
-    .footer-section h3 {
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-    }
-
-    .footer-section ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .footer-section ul li {
-      margin-bottom: 0.5rem;
-    }
-
-    .footer-section a {
-      color: white;
-      text-decoration: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .footer-section a:hover {
-      opacity: 0.8;
-    }
-
-    .footer-bottom {
-      text-align: center;
-      margin-top: 2rem;
-      padding-top: 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    @media (max-width: 768px) {
       .navbar {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
+        background-color: #ff5ca8;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        box-shadow: var(--shadow-md);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
       .nav-links {
-        gap: 1rem;
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
       }
 
       .report-section {
-        padding: 2rem 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
       }
 
       .report-section h2 {
-        font-size: 2rem;
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
       }
-    }
-  </style>
-</head>
-<body>
-  <nav class="navbar">
-    <div class="logo">MediLens 🩺</div>
-    <ul class="nav-links">
-      <li><a href="{{ url_for('home') }}">Home</a></li>
-      <li><a href="{{ url_for('scanner_page') }}">Prescription Scanner</a></li>
-      <li><a href="{{ url_for('report_page') }}" class="active">Report Generation</a></li>
-      <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
-      <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
-    </ul>
-  </nav>
 
-  <main>
-    <section class="report-section">
-      <h2><i class="fas fa-microscope" style="color: var(--primary-color); margin-right: 0.5rem;"></i>Fetal Ultrasound Analysis</h2>
-      <p style="text-align: center; color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 2rem;">
-        Upload your baby's ultrasound images for AI-powered analysis and early disease detection
-      </p>
-      
-      <div class="upload-container">
-        <form
-          id="uploadForm"
-          action="{{ url_for('analyze') }}"
-          method="POST"
-          enctype="multipart/form-data"
+      .upload-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .upload-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2.5rem 2rem;
+        border: 3px dashed var(--primary-color);
+        border-radius: var(--border-radius-lg);
+        background: var(--primary-light);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+      }
+
+      .upload-area:hover {
+        border-color: var(--primary-hover);
+        background: var(--surface-color);
+        transform: translateY(-2px);
+      }
+
+      .upload-area i {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+
+      .upload-area input[type="file"] {
+        display: none;
+      }
+
+      .generate-button {
+        width: 100%;
+        padding: 1rem 2rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .generate-button:hover:not(:disabled) {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .generate-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .loading-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .footer {
+        background-color: #ff5ca8;
+        color: white;
+        padding: 2rem;
+        margin-top: 4rem;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+
+      .footer-section h3 {
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+      }
+
+      .footer-section ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-section ul li {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-section a {
+        color: white;
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .footer-section a:hover {
+        opacity: 0.8;
+      }
+
+      .footer-bottom {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column;
+          gap: 1rem;
+          padding: 1rem;
+        }
+
+        .nav-links {
+          gap: 1rem;
+        }
+
+        .report-section {
+          padding: 2rem 1rem;
+        }
+
+        .report-section h2 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">MediLens 🩺</div>
+      <ul class="nav-links">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li>
+          <a href="{{ url_for('scanner_page') }}">Prescription Scanner</a>
+        </li>
+        <li>
+          <a href="{{ url_for('report_page') }}" class="active"
+            >Report Generation</a
+          >
+        </li>
+        <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
+        <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section class="report-section">
+        <h2>
+          <i
+            class="fas fa-microscope"
+            style="color: var(--primary-color); margin-right: 0.5rem"
+          ></i
+          >Fetal Ultrasound Analysis
+        </h2>
+        <p
+          style="
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+          "
         >
-          <label for="reportInput" class="upload-area" id="uploadArea">
-            <i class="fas fa-baby"></i>
-            <p>Click to upload or drag & drop your baby's ultrasound image</p>
-            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
-              Supported formats: JPEG, PNG, GIF, BMP (Max size: 10MB)
-            </p>
-            <input
-              type="file"
-              name="image"
-              id="reportInput"
-              accept="image/*,.pdf"
-              onchange="enableButton()"
-              required
-            />
-          </label>
-          <button class="generate-button" id="generateButton" disabled>
-            <i class="fas fa-magic"></i>
-            Analyze Baby's Ultrasound
-          </button>
-        </form>
-      </div>
+          Upload your baby's ultrasound images for AI-powered analysis and early
+          disease detection
+        </p>
 
-      <!-- Ultrasound Analysis Features Preview -->
-      <div style="margin-top: 4rem; text-align: center;">
-        <h3 style="color: var(--primary-color); margin-bottom: 2rem; font-size: 1.5rem;">
-          🚀 What Our AI Can Detect in Your Baby's Ultrasound
-        </h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
-          <div style="background: var(--surface-color); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow-md); border-left: 4px solid var(--primary-color);">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">🩺</div>
-            <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Down Syndrome Risk</h4>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Measure Nuchal Translucency (NT) to assess Down Syndrome risk</p>
-          </div>
-          <div style="background: var(--surface-color); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow-md); border-left: 4px solid var(--primary-color);">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">👃</div>
-            <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Nasal Bone Development</h4>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Check if nasal bone is present (missing can indicate chromosomal issues)</p>
-          </div>
-          <div style="background: var(--surface-color); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow-md); border-left: 4px solid var(--primary-color);">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">🧠</div>
-            <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Brain Development</h4>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Analyze brain structures for developmental abnormalities</p>
-          </div>
-          <div style="background: var(--surface-color); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow-md); border-left: 4px solid var(--primary-color);">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">💙</div>
-            <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Heart & Organ Health</h4>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Check for heart defects and organ development issues</p>
+        <div class="upload-container">
+          <form
+            id="uploadForm"
+            action="{{ url_for('analyze') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <label for="reportInput" class="upload-area" id="uploadArea">
+              <i class="fas fa-baby"></i>
+              <p>Click to upload or drag & drop your baby's ultrasound image</p>
+              <p
+                style="
+                  font-size: 0.9rem;
+                  color: var(--text-secondary);
+                  margin-top: 0.5rem;
+                "
+              >
+                Supported formats: JPEG, PNG, GIF, BMP (Max size: 10MB)
+              </p>
+              <input
+                type="file"
+                name="image"
+                id="reportInput"
+                accept="image/*,.pdf"
+                onchange="enableButton()"
+                required
+              />
+            </label>
+            <button class="generate-button" id="generateButton" disabled>
+              <i class="fas fa-magic"></i>
+              Analyze Baby's Ultrasound
+            </button>
+          </form>
+        </div>
+
+        <!-- Ultrasound Analysis Features Preview -->
+        <div style="margin-top: 4rem; text-align: center">
+          <h3
+            style="
+              color: var(--primary-color);
+              margin-bottom: 2rem;
+              font-size: 1.5rem;
+            "
+          >
+            🚀 What Our AI Can Detect in Your Baby's Ultrasound
+          </h3>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+              gap: 2rem;
+              margin-top: 2rem;
+            "
+          >
+            <div
+              style="
+                background: var(--surface-color);
+                padding: 2rem;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-md);
+                border-left: 4px solid var(--primary-color);
+              "
+            >
+              <div style="font-size: 2rem; margin-bottom: 1rem">🩺</div>
+              <h4 style="color: var(--primary-color); margin-bottom: 0.5rem">
+                Down Syndrome Risk
+              </h4>
+              <p style="color: var(--text-secondary); font-size: 0.9rem">
+                Measure Nuchal Translucency (NT) to assess Down Syndrome risk
+              </p>
+            </div>
+            <div
+              style="
+                background: var(--surface-color);
+                padding: 2rem;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-md);
+                border-left: 4px solid var(--primary-color);
+              "
+            >
+              <div style="font-size: 2rem; margin-bottom: 1rem">👃</div>
+              <h4 style="color: var(--primary-color); margin-bottom: 0.5rem">
+                Nasal Bone Development
+              </h4>
+              <p style="color: var(--text-secondary); font-size: 0.9rem">
+                Check if nasal bone is present (missing can indicate chromosomal
+                issues)
+              </p>
+            </div>
+            <div
+              style="
+                background: var(--surface-color);
+                padding: 2rem;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-md);
+                border-left: 4px solid var(--primary-color);
+              "
+            >
+              <div style="font-size: 2rem; margin-bottom: 1rem">🧠</div>
+              <h4 style="color: var(--primary-color); margin-bottom: 0.5rem">
+                Brain Development
+              </h4>
+              <p style="color: var(--text-secondary); font-size: 0.9rem">
+                Analyze brain structures for developmental abnormalities
+              </p>
+            </div>
+            <div
+              style="
+                background: var(--surface-color);
+                padding: 2rem;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-md);
+                border-left: 4px solid var(--primary-color);
+              "
+            >
+              <div style="font-size: 2rem; margin-bottom: 1rem">💙</div>
+              <h4 style="color: var(--primary-color); margin-bottom: 0.5rem">
+                Heart & Organ Health
+              </h4>
+              <p style="color: var(--text-secondary); font-size: 0.9rem">
+                Check for heart defects and organ development issues
+              </p>
+            </div>
           </div>
         </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li>
+              <a href="{{ url_for('scanner_page') }}">Prescription Scanner</a>
+            </li>
+            <li>
+              <a href="{{ url_for('report_page') }}">Report Generation</a>
+            </li>
+            <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
+            <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="#">AI Analysis</a></li>
+            <li><a href="#">Report Generator</a></li>
+            <li><a href="#">Store Locator</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <ul>
+            <li>Email: support@medilens.com</li>
+            <li>Phone: +91 9876543210</li>
+            <li>Address: AI Health Tech, India</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
       </div>
-    </section>
-  </main>
+      <div class="footer-bottom">
+        <p>© 2025 MediLens. All rights reserved.</p>
+      </div>
+    </footer>
 
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>Quick Links</h3>
-        <ul>
-          <li><a href="{{ url_for('home') }}">Home</a></li>
-          <li><a href="{{ url_for('scanner_page') }}">Prescription Scanner</a></li>
-          <li><a href="{{ url_for('report_page') }}">Report Generation</a></li>
-          <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
-          <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Services</h3>
-        <ul>
-          <li><a href="#">AI Analysis</a></li>
-          <li><a href="#">Report Generator</a></li>
-          <li><a href="#">Store Locator</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Contact</h3>
-        <ul>
-          <li>Email: support@medilens.com</li>
-          <li>Phone: +91 9876543210</li>
-          <li>Address: AI Health Tech, India</li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Follow Us</h3>
-        <a href="#"><i class="fab fa-facebook"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2025 MediLens. All rights reserved.</p>
-    </div>
-  </footer>
+    <script>
+      function enableButton() {
+        const fileInput = document.getElementById("reportInput");
+        const generateButton = document.getElementById("generateButton");
+        const uploadArea = document.getElementById("uploadArea");
 
-  <script>
-    function enableButton() {
-      const fileInput = document.getElementById("reportInput");
-      const generateButton = document.getElementById("generateButton");
-      const uploadArea = document.getElementById("uploadArea");
-      
-      if (fileInput.files[0]) {
-        generateButton.disabled = false;
-        generateButton.innerHTML = '<i class="fas fa-magic"></i> Analyze Baby\'s Ultrasound';
-        uploadArea.style.borderColor = 'var(--success-color)';
-        uploadArea.style.background = 'var(--primary-light)';
-        
-        // Show file name
-        const fileName = fileInput.files[0].name;
-        const fileInfo = document.createElement('div');
-        fileInfo.style.cssText = `
+        if (fileInput.files[0]) {
+          generateButton.disabled = false;
+          generateButton.innerHTML =
+            '<i class="fas fa-magic"></i> Analyze Baby\'s Ultrasound';
+          uploadArea.style.borderColor = "var(--success-color)";
+          uploadArea.style.background = "var(--primary-light)";
+
+          // Show file name
+          const fileName = fileInput.files[0].name;
+          const fileInfo = document.createElement("div");
+          fileInfo.style.cssText = `
           margin-top: 1rem;
           padding: 0.5rem 1rem;
           background: var(--success-color);
@@ -382,104 +488,129 @@
           font-size: 0.9rem;
           font-weight: 500;
         `;
-        fileInfo.innerHTML = `📁 Selected: ${fileName}`;
-        
-        // Remove previous file info if exists
-        const existingInfo = uploadArea.querySelector('.file-info');
-        if (existingInfo) {
-          existingInfo.remove();
+          fileInfo.innerHTML = `📁 Selected: ${fileName}`;
+
+          // Remove previous file info if exists
+          const existingInfo = uploadArea.querySelector(".file-info");
+          if (existingInfo) {
+            existingInfo.remove();
+          }
+
+          fileInfo.className = "file-info";
+          uploadArea.appendChild(fileInfo);
         }
-        
-        fileInfo.className = 'file-info';
-        uploadArea.appendChild(fileInfo);
       }
-    }
 
-    // Add form submission handling
-    document.getElementById("uploadForm").addEventListener("submit", function(e) {
-      const fileInput = document.getElementById("reportInput");
-      const generateButton = document.getElementById("generateButton");
-      
-      if (!fileInput.files[0]) {
-        e.preventDefault();
-        showNotification("Please select your baby's ultrasound image first.", "error");
-        return;
-      }
-      
-      // Show loading state
-      generateButton.innerHTML = '<div class="loading-spinner"></div> Analyzing Baby\'s Ultrasound...';
-      generateButton.disabled = true;
-      
-      // Allow form to submit
-    });
+      // Add form submission handling
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", function (e) {
+          const fileInput = document.getElementById("reportInput");
+          const generateButton = document.getElementById("generateButton");
 
-    // Add file validation
-    document.getElementById("reportInput").addEventListener("change", function(e) {
-      const file = e.target.files[0];
-      const generateButton = document.getElementById("generateButton");
+          if (!fileInput.files[0]) {
+            e.preventDefault();
+            showNotification(
+              "Please select your baby's ultrasound image first.",
+              "error",
+            );
+            return;
+          }
+
+          // Show loading state
+          generateButton.innerHTML =
+            '<div class="loading-spinner"></div> Analyzing Baby\'s Ultrasound...';
+          generateButton.disabled = true;
+
+          // Allow form to submit
+        });
+
+      // Add file validation
+      document
+        .getElementById("reportInput")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          const generateButton = document.getElementById("generateButton");
+          const uploadArea = document.getElementById("uploadArea");
+
+          if (file) {
+            // Check file type
+            const allowedTypes = [
+              "image/jpeg",
+              "image/jpg",
+              "image/png",
+              "image/gif",
+              "image/bmp",
+            ];
+            if (!allowedTypes.includes(file.type)) {
+              showNotification(
+                "Please select a valid ultrasound image file (JPEG, PNG, GIF, BMP).",
+                "error",
+              );
+              this.value = "";
+              generateButton.disabled = true;
+              uploadArea.style.borderColor = "var(--error-color)";
+              uploadArea.style.background = "var(--primary-light)";
+              return;
+            }
+
+            // Check file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+              showNotification(
+                "Ultrasound image size should be less than 10MB.",
+                "error",
+              );
+              this.value = "";
+              generateButton.disabled = true;
+              uploadArea.style.borderColor = "var(--error-color)";
+              uploadArea.style.background = "var(--primary-light)";
+              return;
+            }
+
+            enableButton();
+            showNotification(
+              "Ultrasound image selected! Ready to analyze your baby's health.",
+              "success",
+            );
+          }
+        });
+
+      // Drag and drop functionality
       const uploadArea = document.getElementById("uploadArea");
-      
-      if (file) {
-        // Check file type
-        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp'];
-        if (!allowedTypes.includes(file.type)) {
-          showNotification("Please select a valid ultrasound image file (JPEG, PNG, GIF, BMP).", "error");
-          this.value = "";
-          generateButton.disabled = true;
-          uploadArea.style.borderColor = 'var(--error-color)';
-          uploadArea.style.background = 'var(--primary-light)';
-          return;
-        }
-        
-        // Check file size (max 10MB)
-        if (file.size > 10 * 1024 * 1024) {
-          showNotification("Ultrasound image size should be less than 10MB.", "error");
-          this.value = "";
-          generateButton.disabled = true;
-          uploadArea.style.borderColor = 'var(--error-color)';
-          uploadArea.style.background = 'var(--primary-light)';
-          return;
-        }
-        
-        enableButton();
-        showNotification("Ultrasound image selected! Ready to analyze your baby's health.", "success");
-      }
-    });
 
-    // Drag and drop functionality
-    const uploadArea = document.getElementById("uploadArea");
-    
-    uploadArea.addEventListener("dragover", function(e) {
-      e.preventDefault();
-      this.style.borderColor = 'var(--primary-hover)';
-      this.style.background = 'var(--surface-color)';
-    });
-    
-    uploadArea.addEventListener("dragleave", function(e) {
-      e.preventDefault();
-      this.style.borderColor = 'var(--primary-color)';
-      this.style.background = 'var(--primary-light)';
-    });
-    
-    uploadArea.addEventListener("drop", function(e) {
-      e.preventDefault();
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        document.getElementById("reportInput").files = files;
-        document.getElementById("reportInput").dispatchEvent(new Event('change'));
-      }
-    });
+      uploadArea.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        this.style.borderColor = "var(--primary-hover)";
+        this.style.background = "var(--surface-color)";
+      });
 
-    // Notification system
-    function showNotification(message, type = 'success') {
-      const notification = document.createElement('div');
-      notification.className = `medical-notification ${type}`;
-      notification.textContent = message;
-      notification.style.cssText = `
+      uploadArea.addEventListener("dragleave", function (e) {
+        e.preventDefault();
+        this.style.borderColor = "var(--primary-color)";
+        this.style.background = "var(--primary-light)";
+      });
+
+      uploadArea.addEventListener("drop", function (e) {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          document.getElementById("reportInput").files = files;
+          document
+            .getElementById("reportInput")
+            .dispatchEvent(new Event("change"));
+        }
+      });
+
+      // Notification system
+      function showNotification(message, type = "success") {
+        const notification = document.createElement("div");
+        notification.className = `medical-notification ${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'success' ? 'var(--success-color)' : 'var(--error-color)'};
+        background: ${type === "success" ? "var(--success-color)" : "var(--error-color)"};
         color: white;
         padding: 1rem 2rem;
         border-radius: 0.5rem;
@@ -490,35 +621,35 @@
         font-weight: 500;
         max-width: 300px;
       `;
-      
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-      }, 100);
-      
-      setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => {
-          if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-          }
-        }, 300);
-      }, 3000);
-    }
 
-    // Add medical-themed hover effects
-    document.addEventListener('DOMContentLoaded', function() {
-      const uploadArea = document.getElementById("uploadArea");
-      
-      uploadArea.addEventListener("mouseenter", function() {
-        this.style.transform = "scale(1.02)";
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.transform = "translateX(0)";
+        }, 100);
+
+        setTimeout(() => {
+          notification.style.transform = "translateX(100%)";
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        }, 3000);
+      }
+
+      // Add medical-themed hover effects
+      document.addEventListener("DOMContentLoaded", function () {
+        const uploadArea = document.getElementById("uploadArea");
+
+        uploadArea.addEventListener("mouseenter", function () {
+          this.style.transform = "scale(1.02)";
+        });
+
+        uploadArea.addEventListener("mouseleave", function () {
+          this.style.transform = "scale(1)";
+        });
       });
-      
-      uploadArea.addEventListener("mouseleave", function() {
-        this.style.transform = "scale(1)";
-      });
-    });
-  </script>
-</body>
-</html> 
+    </script>
+  </body>
+</html>

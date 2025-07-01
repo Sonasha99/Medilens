@@ -1,340 +1,4 @@
-# #!/usr/bin/env python3
-# """
-# Complete Medical Imaging Flask App
-# Make sure this is your main app.py file
-# """
-
-# from flask import Flask, request, render_template, flash, url_for, redirect
-# import os
-# from werkzeug.utils import secure_filename
-# import uuid
-# import traceback
-
-# # Initialize Flask app
-# app = Flask(__name__)
-# app.config['UPLOAD_FOLDER'] = 'static/uploads'
-# app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
-# app.secret_key = 'your-secret-key-change-this-in-production'
-
-# # Allowed file extensions
-# ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'webp'}
-
-# def allowed_file(filename):
-#     """Check if file extension is allowed"""
-#     return '.' in filename and \
-#            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# def create_upload_folder():
-#     """Ensure upload folder exists"""
-#     if not os.path.exists(app.config['UPLOAD_FOLDER']):
-#         os.makedirs(app.config['UPLOAD_FOLDER'])
-#         print(f"Created upload folder: {app.config['UPLOAD_FOLDER']}")
-
-# # HOME ROUTE
-# @app.route('/')
-# def index():
-#     """Home page"""
-#     return render_template('index.html')
-
-# @app.route('/home')  # Explicit 'home' endpoint
-# def home():
-#     return render_template('index.html') 
-
-# # OCR SCANNER ROUTE
-# @app.route('/scanner_page', methods=['GET', 'POST'])
-# def scanner():
-#     """OCR Scanner page"""
-#     if request.method == 'POST':
-#         if 'imageInput' not in request.files:
-#             return render_template('scanner.html', error='No file selected')
-        
-#         file = request.files['imageInput']
-#         if file.filename == '':
-#             return render_template('scanner.html', error='No file selected')
-        
-#         if file and allowed_file(file.filename):
-#             try:
-#                 create_upload_folder()
-#                 filename = secure_filename(file.filename)
-#                 unique_filename = f"{uuid.uuid4().hex}_{filename}"
-#                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
-#                 file.save(filepath)
-                
-#                 # Placeholder OCR processing
-#                 extracted_text = "Sample extracted text from the image"
-#                 result = ["medical", "prescription", "dosage", "patient"]
-                
-#                 return render_template('scanner.html', 
-#                                      extracted_text=extracted_text, 
-#                                      result=result)
-                                     
-#             except Exception as e:
-#                 return render_template('scanner.html', error=f'Error processing file: {str(e)}')
-#         else:
-#             return render_template('scanner.html', error='Invalid file type')
-    
-#     return render_template('scanner.html')
-
-# # PHARMACY LOCATOR ROUTE
-# @app.route('/stores', methods=['GET', 'POST'])
-# def stores():
-#     """Pharmacy locator page"""
-#     if request.method == 'POST':
-#         location = request.form.get('location', '').strip()
-#         if not location:
-#             return render_template('stores.html', error='Please enter a location')
-        
-#         # Placeholder pharmacy data
-#         pharmacies = [
-#             {
-#                 'name': 'MedPlus Pharmacy',
-#                 'address': f'123 Main St, {location}',
-#                 'phone': '+1 (555) 123-4567',
-#                 'rating': 4.5,
-#                 'hours': '8:00 AM - 10:00 PM'
-#             },
-#             {
-#                 'name': 'Apollo Pharmacy',
-#                 'address': f'456 Health Ave, {location}',
-#                 'phone': '+1 (555) 234-5678',
-#                 'rating': 4.2,
-#                 'hours': '24 Hours'
-#             },
-#             {
-#                 'name': 'Local Pharmacy',
-#                 'address': f'789 Care Blvd, {location}',
-#                 'phone': '+1 (555) 345-6789',
-#                 'rating': 4.0,
-#                 'hours': '9:00 AM - 9:00 PM'
-#             }
-#         ]
-        
-#         return render_template('stores.html', pharmacies=pharmacies)
-    
-#     return render_template('stores.html')
-
-# # ULTRASOUND ANALYSIS ROUTE
-# @app.route('/report', methods=['GET', 'POST'])
-# def report():
-#     """Ultrasound analysis page"""
-#     print(f"Report route accessed with method: {request.method}")  # Debug
-    
-#     if request.method == 'POST':
-#         try:
-#             print("Processing POST request for ultrasound analysis")  # Debug
-            
-#             # Check if the post request has the file part
-#             if 'ultrasoundImage' not in request.files:
-#                 error_msg = 'No file selected'
-#                 print(f"Error: {error_msg}")  # Debug
-#                 print(f"Available files: {list(request.files.keys())}")  # Debug
-#                 flash(error_msg)
-#                 return render_template('report.html', error=error_msg)
-            
-#             file = request.files['ultrasoundImage']
-#             print(f"File received: {file.filename}")  # Debug
-            
-#             # If user does not select file, browser also submits empty part without filename
-#             if file.filename == '':
-#                 error_msg = 'No file selected'
-#                 print(f"Error: {error_msg}")  # Debug
-#                 flash(error_msg)
-#                 return render_template('report.html', error=error_msg)
-            
-#             if file and allowed_file(file.filename):
-#                 print("File is valid, processing...")  # Debug
-                
-#                 # Create upload folder if it doesn't exist
-#                 create_upload_folder()
-                
-#                 # Generate unique filename to avoid conflicts
-#                 filename = secure_filename(file.filename)
-#                 unique_filename = f"{uuid.uuid4().hex}_{filename}"
-#                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
-                
-#                 # Save the file
-#                 file.save(filepath)
-#                 print(f"File saved to: {filepath}")  # Debug
-                
-#                 # Verify file was saved
-#                 if os.path.exists(filepath):
-#                     file_size = os.path.getsize(filepath)
-#                     print(f"File exists, size: {file_size} bytes")  # Debug
-                    
-#                     # Process the image (placeholder for actual analysis)
-#                     analysis_result = analyze_ultrasound_image(filepath)
-                    
-#                     return render_template('report.html', 
-#                                          image_path=filepath,
-#                                          analysis_result=analysis_result)
-#                 else:
-#                     error_msg = 'Failed to save uploaded file'
-#                     print(f"Error: {error_msg}")  # Debug
-#                     return render_template('report.html', error=error_msg)
-                    
-#             else:
-#                 error_msg = 'Invalid file type. Please upload an image file.'
-#                 print(f"Error: {error_msg}")  # Debug
-#                 allowed_ext = ', '.join(ALLOWED_EXTENSIONS)
-#                 return render_template('report.html', 
-#                                      error=f'{error_msg} Allowed: {allowed_ext}')
-        
-#         except Exception as e:
-#             error_msg = f'Unexpected error: {str(e)}'
-#             print(f"Exception in report route: {error_msg}")  # Debug
-#             print(traceback.format_exc())  # Full traceback
-#             return render_template('report.html', error=error_msg)
-    
-#     # GET request - show the form
-#     print("Showing report form (GET request)")  # Debug
-#     return render_template('report.html')
-
-# def analyze_ultrasound_image(image_path):
-#     """
-#     Placeholder function for ultrasound image analysis
-#     Replace this with your actual YOLO model analysis
-#     """
-#     print(f"Analyzing image: {image_path}")  # Debug
-    
-#     # Dummy analysis result
-#     analysis_result = {
-#         'detections': [
-#             {'class_name': 'Fetal Head', 'confidence': 0.85},
-#             {'class_name': 'Spine', 'confidence': 0.72}
-#         ],
-#         'summary': 'Image processed successfully. Detected fetal structures with good visibility.'
-#     }
-    
-#     return analysis_result
-
-# # CONTACT ROUTE
-# @app.route('/contact', methods=['GET', 'POST'])
-# def contact():
-#     """Contact page"""
-#     if request.method == 'POST':
-#         name = request.form.get('name', '').strip()
-#         email = request.form.get('email', '').strip()
-#         subject = request.form.get('subject', '').strip()
-#         message = request.form.get('message', '').strip()
-        
-#         if not all([name, email, subject, message]):
-#             return render_template('contact.html', error='Please fill in all fields')
-        
-#         # Here you would normally send the email or save to database
-#         # For now, just show success message
-#         success_msg = f'Thank you {name}! Your message has been received.'
-#         return render_template('contact.html', success=success_msg)
-    
-#     return render_template('contact.html')
-
-# # DEBUG ROUTES
-# @app.route('/debug')
-# def debug_info():
-#     """Debug information page"""
-#     info = {
-#         'Flask version': flask.__version__ if 'flask' in globals() else 'Unknown',
-#         'Upload folder': app.config['UPLOAD_FOLDER'],
-#         'Upload folder exists': os.path.exists(app.config['UPLOAD_FOLDER']),
-#         'Max content length': app.config['MAX_CONTENT_LENGTH'],
-#         'Template folder': app.template_folder,
-#         'Static folder': app.static_folder,
-#         'Routes': [str(rule) for rule in app.url_map.iter_rules()]
-#     }
-    
-#     return f"<pre>{str(info)}</pre>"
-
-# @app.route('/test_upload', methods=['GET', 'POST'])
-# def test_upload():
-#     """Simple upload test"""
-#     if request.method == 'POST':
-#         print("=== TEST UPLOAD DEBUG ===")
-#         print(f"Request files: {list(request.files.keys())}")
-#         print(f"Request form: {dict(request.form)}")
-        
-#         for key, file in request.files.items():
-#             print(f"File key: {key}, filename: {file.filename}, content_type: {file.content_type}")
-        
-#         return f"Test complete. Check console for debug info."
-    
-#     return '''
-#     <!DOCTYPE html>
-#     <html>
-#     <head><title>Upload Test</title></head>
-#     <body>
-#         <h2>Simple Upload Test</h2>
-#         <form method="POST" enctype="multipart/form-data">
-#             <input type="file" name="test_file" accept="image/*"><br><br>
-#             <button type="submit">Test Upload</button>
-#         </form>
-#     </body>
-#     </html>
-#     '''
-
-# # ERROR HANDLERS
-# @app.errorhandler(404)
-# def not_found_error(error):
-#     """Handle 404 errors"""
-#     return f'''
-#     <h1>404 - Page Not Found</h1>
-#     <p>The requested URL was not found on the server.</p>
-#     <p>Available routes:</p>
-#     <ul>
-#         <li><a href="/">Home</a></li>
-#         <li><a href="/scanner">OCR Scanner</a></li>
-#         <li><a href="/stores">Pharmacy Locator</a></li>
-#         <li><a href="/report">Ultrasound Analysis</a></li>
-#         <li><a href="/contact">Contact</a></li>
-#         <li><a href="/debug">Debug Info</a></li>
-#         <li><a href="/test_upload">Test Upload</a></li>
-#     </ul>
-#     ''', 404
-
-# @app.errorhandler(413)
-# def too_large(e):
-#     """Handle file too large errors"""
-#     return render_template('report.html', 
-#                          error='File too large. Maximum size is 16MB.'), 413
-
-# @app.errorhandler(500)
-# def internal_error(error):
-#     """Handle 500 errors"""
-#     print(f"Internal server error: {error}")
-#     print(traceback.format_exc())
-#     return '''
-#     <h1>500 - Internal Server Error</h1>
-#     <p>Something went wrong on the server.</p>
-#     <p><a href="/">Go back to home</a></p>
-#     ''', 500
-
-# # MAIN EXECUTION
-# if __name__ == '__main__':
-#     print("Starting Medical Imaging Flask App...")
-#     print(f"Upload folder: {app.config['UPLOAD_FOLDER']}")
-#     print(f"Template folder: {app.template_folder}")
-#     print(f"Static folder: {app.static_folder}")
-    
-#     # Create upload folder if it doesn't exist
-#     create_upload_folder()
-    
-#     # Show available routes
-#     print("\nAvailable routes:")
-#     for rule in app.url_map.iter_rules():
-#         print(f"  {rule.rule} -> {rule.endpoint}")
-    
-#     print("\n🚀 Starting server on http://127.0.0.1:5000")
-#     print("Available pages:")
-#     print("  - Home: http://127.0.0.1:5000/")
-#     print("  - OCR Scanner: http://127.0.0.1:5000/scanner")
-#     print("  - Pharmacy Locator: http://127.0.0.1:5000/stores")
-#     print("  - Ultrasound Analysis: http://127.0.0.1:5000/report")
-#     print("  - Contact: http://127.0.0.1:5000/contact")
-#     print("  - Debug Info: http://127.0.0.1:5000/debug")
-#     print("  - Test Upload: http://127.0.0.1:5000/test_upload")
-    
-#     app.run(debug=True, host='127.0.0.1', port=5000)
-
-
-from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file, session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file, session, flash
 import pytesseract
 import cv2
 import os
@@ -364,10 +28,27 @@ import os
 
 from report import enhanced_analyze_ultrasound_image, save_pdf_report, generate_summary_json
 from report import MedicalReportGenerator
-# import report import enhanced_analyze_ultrasound_image, save_pdf_report, generate_summary_json
-#app = Flask(__name__)
 
-app = Flask(__name__, template_folder="./../src/templates", static_folder="src/static")
+
+# Initialize REPORT_MODULE_AVAILABLE first
+REPORT_MODULE_AVAILABLE = False
+
+# Import your custom report generation functions
+try:
+    from report import (
+        enhanced_analyze_ultrasound_image, 
+        save_pdf_report, 
+        generate_summary_json,
+        MedicalReportGenerator
+    )
+    REPORT_MODULE_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: report.py module not found or has issues: {e}")
+    REPORT_MODULE_AVAILABLE = False
+
+pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract-ocr"
+
+app = Flask(__name__, template_folder="./../templates/", static_folder="./../static")
 app.has_run_before = False
 app.secret_key = 'your_secret_key_here'  # TODO: Change this to a secure random key in production
 app.config['UPLOAD_FOLDER'] = './../src/static/uploads'  # PATH: Configure upload directory
@@ -569,105 +250,241 @@ def contact_page():
     """Contact page route"""
     return render_template("contact.html")
 
-@app.route('/report', methods=['GET'])
-def report_page():
-    """Report page route"""
-    return render_template("report.html")
-
-# Utility functions with improved error handling
-def get_coordinates(location):
-    """Get coordinates from location name using OpenStreetMap"""
+# Debug route to check system status
+@app.route('/debug')
+def debug_status():
+    """Debug route to check system status"""
     try:
-        geocode_url = f"https://nominatim.openstreetmap.org/search"
-        params = {
-            'q': location,
-            'format': 'json',
-            'limit': 1
+        status = {
+            'report_module_available': REPORT_MODULE_AVAILABLE,
+            'model_loaded': model is not None,
+            'upload_folder': app.config['UPLOAD_FOLDER'],
+            'upload_folder_exists': os.path.exists(app.config['UPLOAD_FOLDER']),
+            'template_folder': app.template_folder,
+            'static_folder': app.static_folder,
+            'available_templates': [],
+            'recent_uploads': []
         }
-        headers = {'User-Agent': 'Mozilla/5.0 (MyPharmacyApp/1.0)'}
         
-        response = requests.get(geocode_url, params=params, headers=headers, timeout=10)
-        response.raise_for_status()
+        # Check available templates
+        if os.path.exists(app.template_folder):
+            status['available_templates'] = [f for f in os.listdir(app.template_folder) if f.endswith('.html')]
         
-        data = response.json()
-        if data:
-            result = data[0]
-            return float(result["lat"]), float(result["lon"])
-        return None, None
+        # Check recent uploads
+        if os.path.exists(app.config['UPLOAD_FOLDER']):
+            files = os.listdir(app.config['UPLOAD_FOLDER'])
+            status['recent_uploads'] = sorted(files, key=lambda x: os.path.getctime(os.path.join(app.config['UPLOAD_FOLDER'], x)), reverse=True)[:5]
+        
+        # Check session data
+        status['session_data'] = {
+            'has_analysis_results': 'analysis_results' in session,
+            'has_uploaded_filename': 'uploaded_filename' in session
+        }
+        
+        return jsonify(status), 200
+        
     except Exception as e:
-        logger.error(f"Error getting coordinates: {str(e)}")
-        return None, None
+        return jsonify({'error': str(e)}), 500
 
-def fetch_nearby_medical_stores(lat, lon, radius=5000):
-    """Fetch nearby medical stores using Overpass API"""
-    try:
-        query = f"""
-            [out:json];
-            (
-                node["amenity"="pharmacy"](around:{radius},{lat},{lon});
-                way["amenity"="pharmacy"](around:{radius},{lat},{lon});
-                rel["amenity"="pharmacy"](around:{radius},{lat},{lon});
-            );
-            out center;
-        """
-        
-        url = "https://overpass-api.de/api/interpreter"
-        headers = {'User-Agent': 'Mozilla/5.0 (MyPharmacyApp/1.0)'}
-        
-        response = requests.post(url, data=query, headers=headers, timeout=30)
-        response.raise_for_status()
-        
-        data = response.json()
-        pharmacies = []
-        
-        for elem in data.get("elements", []):
-            name = elem.get("tags", {}).get("name", "Unnamed Pharmacy")
+
+@app.route('/report', methods=['GET', 'POST'])
+@handle_errors
+def report_page():
+    """Enhanced report page with integrated analysis"""
+    if request.method == 'POST':
+        try:
+            # Debug logging
+            logger.info(f"POST request received to /report")
+            logger.info(f"Files in request: {list(request.files.keys())}")
+            logger.info(f"Form data: {dict(request.form)}")
             
-            # Handle different element types (node, way, relation)
-            if elem.get("type") == "node":
-                lat_coord = elem.get("lat")
-                lon_coord = elem.get("lon")
+            if 'ultrasoundImage' not in request.files:
+                logger.warning("No 'ultrasoundImage' key found in request.files")
+                flash('No file selected', 'error')
+                return render_template('report.html')
+            
+            file = request.files['ultrasoundImage']
+            logger.info(f"File received: {file.filename}, size: {file.content_length if hasattr(file, 'content_length') else 'unknown'}")
+            
+            if file.filename == '':
+                logger.warning("Empty filename received")
+                flash('No file selected', 'error')
+                return render_template('report.html')
+            
+            if not allowed_file(file.filename):
+                logger.warning(f"File type not allowed: {file.filename}")
+                flash('Invalid file type. Please upload an image file.', 'error')
+                return render_template('report.html')
+            
+            ensure_upload_directory()
+            filename = secure_filename(file.filename)
+            unique_filename = f"{uuid.uuid4().hex}_{filename}"
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+            
+            logger.info(f"Saving file to: {filepath}")
+            file.save(filepath)
+            
+            # Verify file was saved
+            if not os.path.exists(filepath):
+                logger.error(f"File was not saved to {filepath}")
+                flash('Error saving file', 'error')
+                return render_template('report.html')
+            
+            file_size = os.path.getsize(filepath)
+            logger.info(f"File saved successfully, size: {file_size} bytes")
+            
+            # Check if we have the enhanced analysis capability
+            logger.info(f"REPORT_MODULE_AVAILABLE: {REPORT_MODULE_AVAILABLE}")
+            logger.info(f"Model available: {model is not None}")
+            
+            # Use enhanced analysis if report module is available
+            if REPORT_MODULE_AVAILABLE and model is not None:
+                logger.info("Using enhanced analysis")
+                try:
+                    result = enhanced_analyze_ultrasound_image(filepath, model, app.config)
+                    logger.info(f"Enhanced analysis result: {result}")
+                    
+                    if result.get('success'):
+                        # Store results in session for later access
+                        session['analysis_results'] = result
+                        session['uploaded_filename'] = unique_filename
+                        
+                        logger.info("Analysis successful, rendering results")
+                        # Render results using results.html template
+                        return render_template('results.html', results=result)
+                    else:
+                        error_msg = result.get('error', 'Unknown error')
+                        logger.error(f"Enhanced analysis failed: {error_msg}")
+                        flash(f"Analysis failed: {error_msg}", 'error')
+                        return render_template('report.html')
+                except Exception as e:
+                    logger.error(f"Exception in enhanced analysis: {str(e)}")
+                    flash(f"Analysis error: {str(e)}", 'error')
+                    return render_template('report.html')
             else:
-                # For ways and relations, use center coordinates
-                center = elem.get("center", {})
-                lat_coord = center.get("lat")
-                lon_coord = center.get("lon")
-            
-            if lat_coord and lon_coord:
-                pharmacies.append({
-                    "name": name,
-                    "lat": lat_coord,
-                    "lon": lon_coord,
-                    "address": elem.get("tags", {}).get("addr:full", "Address not available")
-                })
+                # Fallback to basic analysis if report module not available
+                logger.info("Using basic analysis fallback")
+                return redirect(url_for('analyze_basic', filename=unique_filename))
+                
+        except Exception as e:
+            logger.error(f"Error in report route: {str(e)}", exc_info=True)
+            try:
+                flash(f'Error processing file: {str(e)}', 'error')
+            except Exception:
+                # If flash fails, log the error instead
+                logger.error(f"Flash function failed, original error: {str(e)}")
+            return render_template('report.html')
+    
+    logger.info("GET request to /report, rendering form")
+    return render_template('report.html')
+
+@app.route('/analyze_basic/<filename>')
+def analyze_basic(filename):
+    """Basic analysis fallback when report module is not available"""
+    try:
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        logger.info(f"Starting basic analysis for file: {filepath}")
         
-        return pharmacies
+        if not os.path.exists(filepath):
+            logger.error(f"File not found: {filepath}")
+            try:
+                flash('File not found', 'error')
+            except Exception:
+                logger.error("File not found and flash function unavailable")
+            return redirect(url_for('report_page'))
+        
+        # Try to get basic image information
+        try:
+            from PIL import Image
+            with Image.open(filepath) as img:
+                width, height = img.size
+                image_format = img.format
+                image_mode = img.mode
+                logger.info(f"Image info: {width}x{height}, format: {image_format}, mode: {image_mode}")
+        except Exception as e:
+            logger.warning(f"Could not get image info: {e}")
+            width, height = "Unknown", "Unknown"
+            image_format = "Unknown"
+            image_mode = "Unknown"
+        
+        # Enhanced basic analysis result
+        basic_result = {
+            'success': True,
+            'filename': filename,
+            'filepath': filepath,
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'image_info': {
+                'width': width,
+                'height': height,
+                'format': image_format,
+                'mode': image_mode,
+                'file_size': os.path.getsize(filepath) if os.path.exists(filepath) else 0
+            },
+            'analysis': {
+                'status': 'Basic analysis completed',
+                'message': 'Image uploaded and processed successfully',
+                'note': 'Advanced AI analysis features require the report module to be properly configured',
+                'recommendations': [
+                    'Ensure the report.py module is available for enhanced analysis',
+                    'Check that the YOLO model file (best.pt) is in the correct location',
+                    'Verify all required dependencies are installed'
+                ]
+            },
+            'report_available': True,
+            'pdf_report': None  # Will be generated on demand
+        }
+        
+        logger.info("Basic analysis completed successfully")
+        session['analysis_results'] = basic_result
+        session['uploaded_filename'] = filename
+        
+        return render_template('results.html', results=basic_result)
+        
     except Exception as e:
-        logger.error(f"Error fetching medical stores: {str(e)}")
-        return []
+        logger.error(f"Error in basic analysis: {str(e)}", exc_info=True)
+        try:
+            flash('Analysis failed', 'error')
+        except Exception:
+            logger.error("Analysis failed and flash function unavailable")
+        return redirect(url_for('report_page'))
 
-# Ultrasound analysis configuration
-key_structures = {
-    0: "Thalami",
-    1: "Midbrain", 
-    2: "Palate",
-    3: "4th Ventricle",
-    4: "Cisterna Magna",
-    5: "NT",
-    6: "Nasal Tip",
-    7: "Nasal Skin",
-    8: "Nasal Bone"
-}
+@app.route('/download_report')
+def download_report():
+    """Download generated report"""
+    try:
 
-key_structure_names = list(key_structures.values())
+        results = session.get('analysis_results')
+        if not results:
+            try:
+                flash('No analysis results available', 'error')
+            except Exception:
+                logger.error("No analysis results available and flash function unavailable")
+            return redirect(url_for('report_page'))
+        
+        if REPORT_MODULE_AVAILABLE:
+            # Use the enhanced PDF generation from report module
+            pdf_path = results.get('pdf_report')
+            if pdf_path and os.path.exists(pdf_path):
+                return send_file(
+                    pdf_path,
+                    mimetype='application/pdf',
+                    as_attachment=True,
+                    download_name=f"ultrasound_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                )
+        
+        # Fallback: generate basic PDF using ReportLab
+        return generate_basic_pdf_report(results)
+        
+    except Exception as e:
+        logger.error(f"Error downloading report: {str(e)}")
+        try:
+            flash('Failed to generate report', 'error')
+        except Exception:
+            logger.error("Failed to generate report and flash function unavailable")
+        return redirect(url_for('report_page'))
 
-def calculate_nt_mm(normalized_height, image_height):
-    """Calculate NT measurement in millimeters"""
-    return round(normalized_height * image_height * 0.1, 2)
-
-# Improved PDF generation using ReportLab instead of WeasyPrint
-def generate_pdf_report(result_data):
-    """Generate PDF report using ReportLab (lighter than WeasyPrint)"""
+def generate_basic_pdf_report(results):
+    """Generate basic PDF report using ReportLab"""
     try:
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=A4)
@@ -680,240 +497,171 @@ def generate_pdf_report(result_data):
             parent=styles['Heading1'],
             fontSize=18,
             spaceAfter=30,
-            alignment=1  # Center alignment
+            alignment=1
         )
         story.append(Paragraph("Ultrasound Analysis Report", title_style))
         story.append(Spacer(1, 20))
         
         # Timestamp
-        story.append(Paragraph(f"<b>Date:</b> {result_data.get('timestamp', 'N/A')}", styles['Normal']))
+        story.append(Paragraph(f"<b>Date:</b> {results.get('timestamp', 'N/A')}", styles['Normal']))
         story.append(Spacer(1, 12))
         
-        # NT Measurement
-        story.append(Paragraph(f"<b>Nuchal Translucency (NT):</b> {result_data.get('nt', 'Not Detected')}", styles['Normal']))
-        story.append(Paragraph(f"<b>Risk Assessment:</b> {result_data.get('risk', 'Unknown')}", styles['Normal']))
-        story.append(Spacer(1, 12))
+        # Analysis details
+        analysis = results.get('analysis', {})
+        for key, value in analysis.items():
+            story.append(Paragraph(f"<b>{key.title()}:</b> {value}", styles['Normal']))
+            story.append(Spacer(1, 6))
         
-        # Structures table
-        structures = result_data.get('structures', {})
-        if structures:
-            story.append(Paragraph("<b>Detected Structures:</b>", styles['Heading2']))
-            
-            # Create table data
-            table_data = [['Structure', 'Status']]
-            for structure, status in structures.items():
-                table_data.append([structure, status])
-            
-            # Create table
-            table = Table(table_data)
-            table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, 0), 14),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black)
-            ]))
-            story.append(table)
-            story.append(Spacer(1, 12))
+        # Add note about enhanced features
+        if not REPORT_MODULE_AVAILABLE:
+            story.append(Spacer(1, 20))
+            story.append(Paragraph("<b>Note:</b> Enhanced analysis features are not available. Please ensure the report module is properly configured.", styles['Normal']))
         
-        # Summary
-        summary = result_data.get('summary', '')
-        if summary:
-            story.append(Paragraph("<b>Diagnostic Summary:</b>", styles['Heading2']))
-            story.append(Paragraph(summary, styles['Normal']))
-        
-        # Add image if available
-        filename = result_data.get('filename')
-        if filename:
-            # PATH: Image path for PDF
-            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            if os.path.exists(image_path):
-                story.append(Spacer(1, 20))
-                story.append(Paragraph("<b>Annotated Image:</b>", styles['Heading2']))
-                story.append(Spacer(1, 12))
-                
-                # Add image to PDF (resize to fit page)
-                img = ReportLabImage(image_path, width=4*inch, height=3*inch)
-                story.append(img)
-        
-        # Build PDF
         doc.build(story)
         buffer.seek(0)
-        return buffer
-        
-    except Exception as e:
-        logger.error(f"Error generating PDF: {str(e)}")
-        raise
-
-
-# all the functionality in analyze route added ---> YOLOv8 inference, structure detection, NT measurement, and risk scoring
-# i should have used external infernece (if anyone wants to do, they can)
-
-@app.route('/analyze', methods=['POST'])
-@handle_errors
-def analyze():
-    """Analyze ultrasound image with improved error handling"""
-    if model is None:
-        return jsonify({'error': 'Model not loaded. Please try again later.'}), 500
-    
-    if 'image' not in request.files:
-        return redirect(url_for('report_page'))
-
-    file = request.files['image']
-    if file.filename == '':
-        return redirect(url_for('report_page'))
-
-    if not allowed_file(file.filename):
-        return jsonify({'error': 'Invalid file type'}), 400
-
-    try:
-        ensure_upload_directory()
-        filename = secure_filename(file.filename)
-        # Add unique identifier to prevent conflicts
-        unique_filename = f"{uuid.uuid4().hex}_{filename}"
-        # PATH: File path for analysis
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
-        file.save(filepath)
-
-        # Read and process image
-        image_bgr = cv2.imread(filepath)
-        if image_bgr is None:
-            raise ValueError("Could not read uploaded image")
-        
-        image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-        image_height, image_width = image_rgb.shape[:2]
-
-        # Run YOLO inference
-        results = model.predict(image_rgb)[0]
-        boxes = results.boxes
-
-        detected_structures = set()
-        nt_measurement_mm = None
-
-        # Process detections
-        if boxes is not None:
-            for box in boxes:
-                x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
-                conf = float(box.conf[0])
-                cls_id = int(box.cls[0])
-                class_name = key_structures.get(cls_id, f"Unknown ({cls_id})")
-
-                logger.info(f"Detected {class_name} with confidence {conf:.2f}")
-                detected_structures.add(class_name)
-
-                # Draw bounding box
-                cv2.rectangle(image_bgr, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                cv2.putText(image_bgr, f"{class_name} ({conf:.2f})", (x1, y1 - 10),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-
-                # Calculate NT measurement
-                if class_name.lower() == "nt":
-                    box_height = y2 - y1
-                    nt_measurement_mm = calculate_nt_mm(box_height / image_height, image_height)
-
-        # Determine risk level
-        risk = "High" if nt_measurement_mm and nt_measurement_mm > 3.0 else "Low" if nt_measurement_mm else "Unknown"
-
-        # Save annotated image
-        annotated_filename = f"annotated_{unique_filename}"
-        # PATH: Annotated image path
-        annotated_path = os.path.join(app.config['UPLOAD_FOLDER'], annotated_filename)
-        cv2.imwrite(annotated_path, image_bgr)
-
-        # Clean up original uploaded file
-        if os.path.exists(filepath):
-            os.remove(filepath)
-
-        # Prepare results
-        structure_status = {
-            name: ("Detected" if name in detected_structures else "Not Detected")
-            for name in key_structure_names
-        }
-
-        # Generate diagnostic summary
-        diagnostic_summary = generate_diagnostic_summary(nt_measurement_mm, detected_structures, risk)
-
-        result_data = {
-            "filename": annotated_filename,
-            "nt": f"{nt_measurement_mm} mm" if nt_measurement_mm else "Not Detected",
-            "risk": risk,
-            "structures": structure_status,
-            "summary": diagnostic_summary,
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
-
-        # Save to session
-        session['result_data'] = json.dumps(result_data)
-        return render_template("Genrepo.html", results=result_data)
-
-    except Exception as e:
-        logger.error(f"Error in analyze route: {str(e)}")
-        return jsonify({'error': f'Analysis failed: {str(e)}'}), 500
-
-def generate_diagnostic_summary(nt_measurement_mm, detected_structures, risk):
-    """Generate diagnostic summary based on analysis results"""
-    summary_parts = []
-    
-    if nt_measurement_mm:
-        summary_parts.append(f"Nuchal Translucency (NT) measured {nt_measurement_mm} mm.")
-        if risk == "High":
-            summary_parts.append("This measurement is above the normal range and may indicate increased risk for chromosomal abnormalities.")
-        else:
-            summary_parts.append("This measurement is within normal limits.")
-    else:
-        summary_parts.append("Nuchal Translucency (NT) was not detected in this image.")
-
-    if "Nasal Bone" in detected_structures:
-        summary_parts.append("Nasal bone is present, which is a positive finding.")
-    else:
-        summary_parts.append("Nasal bone was not detected, which could be an additional marker for assessment.")
-
-    if "Cisterna Magna" in detected_structures:
-        summary_parts.append("Cisterna Magna is visible and appears normal.")
-    else:
-        summary_parts.append("Cisterna Magna not clearly visualized. Further imaging may be recommended.")
-
-    return " ".join(summary_parts)
-
-@app.route('/download_pdf')
-@handle_errors
-def download_pdf():
-    """Download PDF report using ReportLab"""
-    try:
-        result_data = json.loads(session.get('result_data', '{}'))
-        if not result_data:
-            return jsonify({'error': 'No analysis data available'}), 400
-        
-        pdf_buffer = generate_pdf_report(result_data)
         
         return send_file(
-            pdf_buffer,
+            buffer,
             mimetype='application/pdf',
             as_attachment=True,
-            download_name=f"ultrasound_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            download_name=f"basic_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        )
+        
+    except Exception as e:
+        logger.error(f"Error generating basic PDF: {str(e)}")
+        raise
+
+@app.route('/generate_report')
+def generate_report():                                                                   
+    """Generate comprehensive report using Genrepo.html template if available"""         
+    try:                                                                             
+        analysis_results = session.get('analysis_results')
+        summary = session.get('summary')
+        annotated_image = session.get('annotated_image')                                       
+        pdf_filename = session.get('pdf_filename', 'report.pdf')
+        if not analysis_results:                                                                  
+            flash('No analysis results available', 'error')                              
+            return redirect(url_for('report_page'))
+        print("✅ generate_report reached")
+        print("📌 analysis_results keys:", analysis_results.keys())
+        print("📌 summary keys:", summary.keys() if summary else "None")
+        print("📌 annotated_image:", annotated_image)
+        print("📌 pdf_filename:", pdf_filename)                                      
+
+                                                                                
+        #summary = generate_summary_json(results)                                         
+        annotated_filename = os.path.basename(analysis_results.get('annotated_image_path', ''))
+        annotated_image_url = url_for('static', filename=f'uploads/{annotated_filename}') if annotated_filename else None
+        pdf_filename = os.path.basename(session.get('pdf_report', 'report.pdf'))
+                                                                        
+        return render_template("results.html",                                           
+            analysis_results=analysis_results,                                
+            annotated_image=annotated_image_url,     
+            summary=summary,
+            pdf_filename=pdf_filename                   
         )
     except Exception as e:
-        logger.error(f"Error generating PDF: {str(e)}")
-        return jsonify({'error': 'Failed to generate PDF report'}), 500
-
+        import traceback
+        print("❌ Exception in generate_report:", str(e))
+        traceback.print_exc()  # This gives you full context
+        flash(f'Error generating report: {str(e)}', 'error')
+        return redirect(url_for('report_page'))
 # Error handlers
 @app.errorhandler(404)
 def not_found_error(error):
-    return render_template('404.html'), 404
+    return render_template('404.html') if os.path.exists(os.path.join(app.template_folder, '404.html')) else "Page not found", 404
 
 @app.errorhandler(500)
 def internal_error(error):
-    return render_template('500.html'), 500
+    return render_template('500.html') if os.path.exists(os.path.join(app.template_folder, '500.html')) else "Internal server error", 500
 
 @app.errorhandler(413)
 def file_too_large(error):
     return jsonify({'error': 'File too large. Maximum size is 16MB.'}), 413
 
 
+# Legacy analyze route for backward compatibility
+@app.route('/analyze', methods=['POST'])
+@handle_errors
+def analyze():
+    if 'image' not in request.files:
+        flash("No image file provided.", 'error')
+        return redirect(url_for('report_page'))
+
+    file = request.files['image']
+    if file.filename == '':
+        flash("No selected image.", 'error')
+        return redirect(url_for('report_page'))
+
+    if file:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+
+        result = enhanced_analyze_ultrasound_image(filepath, model, app.config)
+
+        if result.get('success'):
+            print("Analysis successful — redirecting to generate_report")
+
+            analysis_results = result['analysis_results']
+            analysis_results['detected_structures'] = list(analysis_results.get('detected_structures', []))
+
+            session['analysis_results'] = analysis_results
+            session['uploaded_filename'] = filename
+
+            # Optional: Save PDF
+            pdf_path = save_pdf_report(result['pdf_report'], f"report_{filename}.pdf", app.config['UPLOAD_FOLDER'])
+            if pdf_path:
+                session['pdf_report'] = pdf_path
+                session['pdf_filename'] = f"report_{filename}.pdf"
+
+
+            return redirect(url_for('generate_report'))
+
+        else:
+            flash(f"Analysis failed: {result.get('error', 'Unknown error')}", 'error')
+            return redirect(url_for('report_page'))
+
+    flash("Invalid image file.", 'error')
+    return redirect(url_for('report_page'))
+
+
 if __name__ == '__main__':
+    # Ensure upload directory exists
     ensure_upload_directory()
-    # For production, set debug=False and use a proper WSGI server
+    
+    print("="*50)
+    print("Medical Imaging Flask App Starting...")
+    print("="*50)
+    print(f"Report module available: {REPORT_MODULE_AVAILABLE}")
+    print(f"Model loaded: {model is not None}")
+    print(f"Upload folder: {app.config['UPLOAD_FOLDER']}")
+    print(f"Upload folder exists: {os.path.exists(app.config['UPLOAD_FOLDER'])}")
+    print(f"Template folder: {app.template_folder}")
+    print(f"Template folder exists: {os.path.exists(app.template_folder)}")
+    print(f"Static folder: {app.static_folder}")
+    
+    # Check for required templates
+    required_templates = ['index.html', 'report.html', 'results.html', 'scanner.html', 'stores.html', 'contact.html']
+    missing_templates = []
+    
+    for template in required_templates:
+        template_path = os.path.join(app.template_folder, template)
+        if not os.path.exists(template_path):
+            missing_templates.append(template)
+    
+    if missing_templates:
+        print(f"WARNING: Missing templates: {missing_templates}")
+    else:
+        print("All required templates found")
+    
+    # Show available routes
+    print("\nAvailable routes:")
+    for rule in app.url_map.iter_rules():
+        methods = ', '.join(rule.methods) if rule.methods else 'GET'
+        print(f"  {rule.rule} -> {rule.endpoint} [{methods}]")
+    
+    print("\nDebug route available at: http://localhost:5000/debug")
+    print("="*50)
+    
     app.run(debug=True, host='0.0.0.0', port=5000)
