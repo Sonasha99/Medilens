@@ -10,10 +10,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
-      rel="stylesheet"
-    />
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       :root {
@@ -42,9 +39,7 @@
       body {
         background-color: #fff5f7;
         margin: 0;
-        font-family: "Poppins", sans-serif;
-        color: var(--text-color);
-        line-height: 1.6;
+        font-family: 'Segoe UI', sans-serif;
       }
 
       .navbar {
@@ -54,41 +49,16 @@
         justify-content: space-between;
         align-items: center;
         color: white;
-        box-shadow: var(--shadow-md);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
       }
-
-      .logo {
-        font-size: 1.5rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
       .nav-links {
         list-style: none;
         display: flex;
-        gap: 2rem;
-        margin: 0;
-        padding: 0;
+        gap: 1.5rem;
       }
-
       .nav-links a {
         color: white;
         text-decoration: none;
         font-weight: 500;
-        padding: 0.5rem 1rem;
-        border-radius: var(--border-radius);
-        transition: all 0.3s ease;
-      }
-
-      .nav-links a:hover,
-      .nav-links a.active {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-2px);
       }
 
       .report-section {
@@ -233,16 +203,6 @@
       }
 
       @media (max-width: 768px) {
-        .navbar {
-          flex-direction: column;
-          gap: 1rem;
-          padding: 1rem;
-        }
-
-        .nav-links {
-          gap: 1rem;
-        }
-
         .report-section {
           padding: 2rem 1rem;
         }
@@ -255,17 +215,26 @@
   </head>
   <body>
     <nav class="navbar">
-      <div class="logo">MediLens 🩺</div>
+      <div class="logo">
+        MediLens 🩺
+        <span class="stethoscope-icon">
+          <svg width="24" height="24" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M30 15 C20 15, 20 30, 30 35" stroke="#FF5CA8" stroke-width="3" stroke-linecap="round"/>
+            <path d="M90 15 C100 15, 100 30, 90 35" stroke="#FF5CA8" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="30" cy="15" r="3" fill="#FFB6D5"/>
+            <circle cx="90" cy="15" r="3" fill="#FFB6D5"/>
+            <path d="M30 35 C50 50, 70 50, 90 35" stroke="#FF5CA8" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M60 50 L60 80" stroke="#FF5CA8" stroke-width="3" stroke-linecap="round"/>
+            <path d="M60 80 C40 95, 40 105, 60 110" stroke="#FF5CA8" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <circle cx="60" cy="110" r="6" fill="#FF5CA8" stroke="#FF5CA8" stroke-width="2"/>
+            <circle cx="60" cy="110" r="3" fill="white"/>
+          </svg>
+        </span>
+      </div>
       <ul class="nav-links">
         <li><a href="{{ url_for('home') }}">Home</a></li>
-        <li>
-          <a href="{{ url_for('scanner_page') }}">Prescription Scanner</a>
-        </li>
-        <li>
-          <a href="{{ url_for('report_page') }}" class="active"
-            >Report Generation</a
-          >
-        </li>
+        <li><a href="{{ url_for('scanner_page') }}">Prescription Scanner</a></li>
+        <li><a href="{{ url_for('report_page') }}">Report Generation</a></li>
         <li><a href="{{ url_for('stores_page') }}">Medical Stores</a></li>
         <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
       </ul>

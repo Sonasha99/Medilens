@@ -260,11 +260,11 @@
 .form-group select {
     width: 100%;
     padding: 1rem 1.25rem;
-    border: 2px solid var(--border-color);
+    border: 2px solid white;
     border-radius: var(--border-radius);
     font-size: 1rem;
     transition: all 0.3s ease;
-    background: var(--surface-color);
+    background: #ffe0ef;
     color: var(--text-color);
     font-family: inherit;
 }
@@ -278,10 +278,10 @@
     transform: translateY(-2px);
 }
 
-.form-group input:invalid:not(:focus),
-.form-group textarea:invalid:not(:focus) {
-    border-color: var(--error-color);
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+.form-group input:invalid,
+.form-group textarea:invalid {
+    border-color: white !important;
+    box-shadow: none !important;
 }
 
 .form-group input:valid,
