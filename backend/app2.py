@@ -106,64 +106,36 @@ def ensure_upload_directory():
         os.makedirs(app.config['UPLOAD_FOLDER'])
         logger.info(f"Created upload directory: {app.config['UPLOAD_FOLDER']}")
 
-# Improved file validation
 def allowed_file(filename):
     """Check if file extension is allowed"""
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Preprocess image for OCR with better error handling
+# Preprocess image for OCR
 def preprocess_image(image_path):
-    """Preprocess image for better OCR results"""
-    try:
-        if not os.path.exists(image_path):
-            raise FileNotFoundError(f"Image file not found: {image_path}")
-        
-        image = cv2.imread(image_path)
-        if image is None:
-            raise ValueError("Could not read image file")
-        
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        alpha = 1.8  # Contrast enhancement
-        beta = 20    # Brightness adjustment
-        contrast = cv2.convertScaleAbs(gray, alpha=alpha, beta=beta)
-        blur = cv2.GaussianBlur(contrast, (3, 3), 0)
-        thresh = cv2.adaptiveThreshold(
-            blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
-        )
-        kernel = np.ones((2, 2), np.uint8)
-        processed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-        return processed
-    except Exception as e:
-        logger.error(f"Error preprocessing image: {str(e)}")
-        raise
+    image = cv2.imread(image_path)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    alpha = 1.8  # Contrast enhancement
+    beta = 20    # Brightness adjustment
+    contrast = cv2.convertScaleAbs(gray, alpha=alpha, beta=beta)
+    blur = cv2.GaussianBlur(contrast, (3, 3), 0)
+    thresh = cv2.adaptiveThreshold(
+        blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
+    )
+    kernel = np.ones((2, 2), np.uint8)
+    processed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+    return processed
 
-# Extract text from the image with better error handling
+# Extract text from the image
 def extract_text(image_path):
-    """Extract text from image using OCR"""
-    try:
-        processed_image = preprocess_image(image_path)
-        # PATH: Temporary processed image path
-        temp_path = os.path.join(app.config['UPLOAD_FOLDER'], 'processed.png')
-        cv2.imwrite(temp_path, processed_image)
-        
-        text = pytesseract.image_to_string(processed_image, config='--psm 11')
-        
-        # Clean up temporary file
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
-        
-        return text.strip()
-    except Exception as e:
-        logger.error(f"Error extracting text: {str(e)}")
-        return ""
+    processed_image = preprocess_image(image_path)
+    temp_path = os.path.join(app.config['UPLOAD_FOLDER'], 'processed.png')
+    cv2.imwrite(temp_path, processed_image)
+    text = pytesseract.image_to_string(processed_image, config='--psm 11')
+    return text.strip()
 
 # Split text into unique words
 def split_into_unique_words(text):
-    """Split text into unique words while preserving order"""
-    if not text:
-        return []
-    
     text = text.lower()
     text = re.sub(r"[^\w\s]", "", text)
     words = text.split()
@@ -181,68 +153,38 @@ def index():
     return render_template('index.html')
 
 @app.route("/scanner", methods=['GET', 'POST'])
-@handle_errors
 def scanner_page():
-    """Scanner page route with improved error handling"""
     result = None
-    error_message = None
-    
     if request.method == 'POST':
         if 'imageInput' not in request.files:
-            error_message = "No file uploaded"
-        else:
-            file = request.files['imageInput']
-            if file.filename == '':
-                error_message = "No file selected"
-            elif not allowed_file(file.filename):
-                error_message = "Invalid file type. Please upload an image file."
-            else:
-                try:
-                    ensure_upload_directory()
-                    filename = secure_filename(file.filename)
-                    # Add timestamp to filename to avoid conflicts
-                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_")
-                    filename = timestamp + filename
-                    # PATH: File upload path
-                    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                    file.save(file_path)
-                    
-                    extracted_text = extract_text(file_path)
-                    result = split_into_unique_words(extracted_text)
-                    
-                    # Clean up uploaded file after processing
-                    if os.path.exists(file_path):
-                        os.remove(file_path)
-                        
-                except Exception as e:
-                    error_message = f"Error processing image: {str(e)}"
-    
-    return render_template('scanner.html', result=result, error=error_message)
+            return redirect(request.url)
+        file = request.files['imageInput']
+        if file.filename == '':
+            return redirect(request.url)
+        if file:
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+            extracted_text = extract_text(file_path)
+            result = split_into_unique_words(extracted_text)
+    return render_template('scanner.html', result=result)
 
 @app.route("/stores", methods=['GET', 'POST'])
-@handle_errors
 def stores_page():
-    """Stores page route with improved error handling"""
     pharmacies = []
     error = None
-    
     if request.method == 'POST':
-        location = request.form.get('location', '').strip()
+        location = request.form.get('location')
         if location:
-            try:
-                lat, lon = get_coordinates(location)
-                if lat and lon:
-                    pharmacies = fetch_nearby_medical_stores(lat, lon)
-                    if not pharmacies:
-                        error = "No pharmacies found nearby. Try a different location."
-                else:
-                    error = "Location not found. Please try a different search term."
-            except Exception as e:
-                error = "Error fetching pharmacy data. Please try again."
-                logger.error(f"Error in stores search: {str(e)}")
+            lat, lon = get_coordinates(location)
+            if lat and lon:
+                pharmacies = fetch_nearby_medical_stores(lat, lon)
+                if not pharmacies:
+                    error = "No pharmacies found nearby."
+            else:
+                error = "Location not found."
         else:
             error = "Please enter a location."
-    
     return render_template('stores.html', pharmacies=pharmacies, error=error)
 
 @app.route("/contact")
@@ -250,6 +192,36 @@ def contact_page():
     """Contact page route"""
     return render_template("contact.html")
 
+
+
+def get_coordinates(location):
+    geocode_url = f"https://nominatim.openstreetmap.org/search?q={requests.utils.quote(location)}&format=json"
+    headers = {'User-Agent': 'Mozilla/5.0 (MyPharmacyApp/1.0)'}
+    response = requests.get(geocode_url, headers=headers)
+    if response.status_code == 200 and response.json():
+        result = response.json()[0]
+        return float(result["lat"]), float(result["lon"])
+    return None, None
+
+def fetch_nearby_medical_stores(lat, lon):
+    query = f"""
+        [out:json];
+        node["amenity"="pharmacy"](around:5000,{lat},{lon});
+        out;
+    """
+    url = "https://overpass-api.de/api/interpreter?data=" + requests.utils.quote(query)
+    headers = {'User-Agent': 'Mozilla/5.0 (MyPharmacyApp/1.0)'}
+    response = requests.get(url, headers=headers)
+    try:
+        data = response.json()
+        pharmacies = [{
+            "name": elem.get("tags", {}).get("name", "Unnamed Pharmacy"),
+            "lat": elem.get("lat"),
+            "lon": elem.get("lon")
+        } for elem in data.get("elements", [])]
+        return pharmacies
+    except:
+        return []
 # Debug route to check system status
 @app.route('/debug')
 def debug_status():
@@ -537,7 +509,7 @@ def generate_report():
     try:                                                                             
         analysis_results = session.get('analysis_results')
         summary = session.get('summary')
-        annotated_image = session.get('annotated_image')                                       
+        annotated_filename = session.get('annotated_image')                                       
         pdf_filename = session.get('pdf_filename', 'report.pdf')
         if not analysis_results:                                                                  
             flash('No analysis results available', 'error')                              
@@ -545,20 +517,22 @@ def generate_report():
         print("✅ generate_report reached")
         print("📌 analysis_results keys:", analysis_results.keys())
         print("📌 summary keys:", summary.keys() if summary else "None")
-        print("📌 annotated_image:", annotated_image)
-        print("📌 pdf_filename:", pdf_filename)                                      
+        print("📌 annotated_image:", annotated_filename)
+        print("📌 pdf_filename:", pdf_filename)                                                                                                  
 
-                                                                                
-        #summary = generate_summary_json(results)                                         
-        annotated_filename = os.path.basename(analysis_results.get('annotated_image_path', ''))
+        annotated_image = session.get('annotated_image')                      
         annotated_image_url = url_for('static', filename=f'uploads/{annotated_filename}') if annotated_filename else None
         pdf_filename = os.path.basename(session.get('pdf_report', 'report.pdf'))
-                                                                        
+
+        print(f"✅ annotated_image = {annotated_image}")
+        print(f"✅ annotated_image_url = {annotated_image_url}")
+                            
         return render_template("results.html",                                           
-            analysis_results=analysis_results,                                
-            annotated_image=annotated_image_url,     
+            analysis_results=analysis_results,
+            annotated_image=annotated_image,                                
+            annotated_image_url=annotated_image_url,     
             summary=summary,
-            pdf_filename=pdf_filename                   
+            pdf_filename=session.get('pdf_filename')                   
         )
     except Exception as e:
         import traceback
@@ -608,14 +582,16 @@ def analyze():
 
             session['analysis_results'] = analysis_results
             session['uploaded_filename'] = filename
+            session['summary'] = generate_summary_json(analysis_results)
 
-            # Optional: Save PDF
+            # ✅ Corrected line
+            session['annotated_image'] = result.get('annotated_image_path')
+
+            # ✅ Store PDF path too
             pdf_path = save_pdf_report(result['pdf_report'], f"report_{filename}.pdf", app.config['UPLOAD_FOLDER'])
             if pdf_path:
-                session['pdf_report'] = pdf_path
                 session['pdf_filename'] = f"report_{filename}.pdf"
-
-
+    
             return redirect(url_for('generate_report'))
 
         else:
