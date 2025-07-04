@@ -66,6 +66,11 @@ cd medilens-2
 
 ```bash
 pip install -r requirements.txt
+import pytesseract
+pip install opencv-python
+pip install reportlab
+pip install ultralytics
+
 ```
 
 ---
