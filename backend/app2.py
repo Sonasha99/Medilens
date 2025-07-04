@@ -51,8 +51,10 @@ pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract-ocr"
 app = Flask(__name__, template_folder="./../templates/", static_folder="./../static")
 app.has_run_before = False
 app.secret_key = 'your_secret_key_here'  # TODO: Change this to a secure random key in production
-app.config['UPLOAD_FOLDER'] = './../src/static/uploads'  # PATH: Configure upload directory
+#app.config['UPLOAD_FOLDER'] = './../src/static/uploads'  # PATH: Configure upload directory
+app.config['UPLOAD_FOLDER'] = os.path.abspath('./../static/uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+app.config['STATIC_FOLDER'] = os.path.abspath('./../static')
 
 import os
 print("Template directory is:", os.path.abspath(app.template_folder))
@@ -520,10 +522,15 @@ def generate_report():
         print("📌 annotated_image:", annotated_filename)
         print("📌 pdf_filename:", pdf_filename)                                                                                                  
 
-        annotated_image = session.get('annotated_image')                      
-        annotated_image_url = url_for('static', filename=f'uploads/{annotated_filename}') if annotated_filename else None
+        annotated_image = session.get('annotated_image')
+        annotated_image_url = session.get('annotated_image_url')
+                    
+        #annotated_image_url = url_for('static', filename=f'uploads/{annotated_image}') if annotated_image else None
         pdf_filename = os.path.basename(session.get('pdf_report', 'report.pdf'))
-
+        # annotated_image_url = None
+        # if annotated_image:
+        #     annotated_image_url = url_for('static', filename=f'predictions/{annotated_image}')
+        #annotated_image_url = f"/static/uploads/{annotated_filename}" if annotated_filename else None
         print(f"✅ annotated_image = {annotated_image}")
         print(f"✅ annotated_image_url = {annotated_image_url}")
                             
@@ -532,7 +539,8 @@ def generate_report():
             annotated_image=annotated_image,                                
             annotated_image_url=annotated_image_url,     
             summary=summary,
-            pdf_filename=session.get('pdf_filename')                   
+            pdf_filename=session.get('pdf_filename'),
+            results={"success":True}                   
         )
     except Exception as e:
         import traceback
@@ -585,8 +593,9 @@ def analyze():
             session['summary'] = generate_summary_json(analysis_results)
 
             # ✅ Corrected line
-            session['annotated_image'] = result.get('annotated_image_path')
-
+            #session['annotated_image'] = os.path.basename(annotated_image_path)
+            session['annotated_image'] = os.path.basename(result.get('annotated_image_path',''))
+            session['annotated_image_url'] = result.get('annotated_image_url')
             # ✅ Store PDF path too
             pdf_path = save_pdf_report(result['pdf_report'], f"report_{filename}.pdf", app.config['UPLOAD_FOLDER'])
             if pdf_path:

@@ -19,6 +19,8 @@ from reportlab.graphics.shapes import Drawing
 from reportlab.graphics.charts.barcharts import VerticalBarChart
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
 
+
+
 # Medical reference data and diagnostic criteria
 MEDICAL_REFERENCES = {
     "nt_normal_ranges": {
@@ -122,7 +124,7 @@ MEDICAL_REFERENCES = {
    
 class MedicalReportGenerator:
     def __init__(self, app_config):
-        self.upload_folder = app_config['UPLOAD_FOLDER']
+        self.upload_folder = app_config.get('UPLOAD_FOLDER')
         self.logger = logging.getLogger(__name__)
         
     def calculate_gestational_age_from_structures(self, detected_structures, nt_measurement=None):
@@ -661,13 +663,20 @@ class MedicalReportGenerator:
 # Integration functions for your Flask app
 def enhanced_analyze_ultrasound_image(image_path, model, app_config):
     """Enhanced analysis function with comprehensive reporting"""
+    # Remove the problematic lines that redefine app_config
+    # app_config is already passed as a parameter
+    
+    static_folder = app_config.get('STATIC_FOLDER', './static')  # fallback if not provided
+    upload_folder = app_config.get('UPLOAD_FOLDER')
+    annotated_filename = 'annotated_result.jpg'
+    annotated_path = os.path.join(upload_folder, annotated_filename)
+
     try:
-        report_generator = MedicalReportGenerator(app_config)
-        
-        # Load and preprocess image
         image = cv2.imread(image_path)
         if image is None:
             raise ValueError("Could not load image")
+
+        report_generator = MedicalReportGenerator(app_config)
         
         # Run YOLO detection - results is a list of Results objects
         results = model(image_path)  # This returns a list of Results objects
@@ -710,11 +719,16 @@ def enhanced_analyze_ultrasound_image(image_path, model, app_config):
                 except (IndexError, TypeError, ValueError) as e:
                     logging.warning(f"Error processing detection box: {str(e)}")
                     continue
+        
         print("Detected structures:", detected_structures)
         print("NT measurement:", nt_measurement)
 
         # Create annotated image
         annotated_image_path = create_annotated_image(image_path, results, app_config)
+        
+        # Fix the static folder path resolution
+        rel_path = os.path.relpath(annotated_image_path, start=static_folder)
+        annotated_image_url = f"/static/{rel_path.replace(os.sep, '/')}"
         
         # Compile analysis results
         analysis_results = {
@@ -725,8 +739,6 @@ def enhanced_analyze_ultrasound_image(image_path, model, app_config):
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'maternal_age': 30  # This should come from user input
         }
-
-   
         
         # Generate comprehensive PDF report
         pdf_buffer = report_generator.generate_comprehensive_pdf_report(analysis_results)
@@ -735,14 +747,15 @@ def enhanced_analyze_ultrasound_image(image_path, model, app_config):
             'success': True,
             'analysis_results': analysis_results,
             'pdf_report': pdf_buffer,
-            'annotated_image_path': annotated_image_path
+            'annotated_image_path': annotated_image_path,
+            'annotated_image_url': annotated_image_url 
         }
         
     except Exception as e:
         logging.error(f"Error in enhanced analysis: {str(e)}")
-        return {'success': False, 'error': str(e)}    
+        return {'success': False, 'error': str(e)}
 
-
+    
 def estimate_nt_measurement(box_height_pixels, pixel_to_mm_ratio=0.1):
     """Estimate NT measurement from bounding box height"""
     try:
@@ -797,6 +810,7 @@ def create_annotated_image(image_path, results, app_config):
         # Save annotated image
         annotated_path = os.path.join(app_config['UPLOAD_FOLDER'], 'annotated_result.jpg')
         cv2.imwrite(annotated_path, image)
+        print(f"✅ Annotated image saved at: {annotated_path}")
         return annotated_path
         
     except Exception as e:
