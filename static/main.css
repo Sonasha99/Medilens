@@ -322,7 +322,8 @@ main {
 }
 
 .footer-section h3 {
-    color: var(--primary-color);
+    
+     color: var(--primary-color); 
     font-size: 1.1rem; /* Smaller heading */
     margin-bottom: 1rem;
     font-weight: 600;

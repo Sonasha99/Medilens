@@ -280,7 +280,7 @@
 
 .form-group input:invalid,
 .form-group textarea:invalid {
-    border-color: white !important;
+    border-color: rgb(124, 63, 118) !important;
     box-shadow: none !important;
 }
 

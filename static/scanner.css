@@ -50,6 +50,13 @@
     margin-right: auto;
 }
 
+.upload-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 .upload-area {
     border: 2px dashed var(--border-color);
     padding: 4rem 4rem;
@@ -103,6 +110,8 @@
     position: relative;
     overflow: hidden;
     margin: 2rem auto 0;
+    box-sizing: border-box;
+    margin-top: 1.5rem;
 }
 
 .scan-button::before {
@@ -365,6 +374,16 @@
     .step {
         padding: 1.5rem 1rem;
     }
+
+    .upload-area {
+        padding: 2rem 1rem;
+        min-height: 220px;
+    }
+    .scan-button {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 1.2rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -379,6 +398,18 @@
     
     .step {
         padding: 1.5rem 1rem;
+    }
+
+    .upload-area {
+        padding: 1rem 0.5rem;
+        min-height: 120px;
+    }
+    .scan-button {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 1rem;
+        font-size: 1rem;
+        border-radius: 1.5rem;
     }
 }
 

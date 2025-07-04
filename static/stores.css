@@ -4,93 +4,180 @@
     margin: 0 auto;
     padding: 3rem 2rem;
     animation: fadeInUp 0.8s ease-out both;
+    background: #fff0f6;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 24px 0 rgba(255, 92, 168, 0.08);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ff5ca8;
+    margin-bottom: 0.5rem;
+}
+.section-underline {
+    width: 60px;
+    height: 4px;
+    background: #ffb6d5;
+    border-radius: 2px;
+    margin: 0.5rem auto 1.5rem auto;
+}
+.section-description {
+    font-size: 1.2rem;
+    color: #a38ca3;
+    max-width: 600px;
+    margin: 0 auto 2.5rem auto;
+    text-align: center;
 }
 
 .search-container {
     margin: 2rem 0;
-}
-
-.search-box {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    box-shadow: none;
+    position: relative;
 }
 
-.search-box input {
+.search-container::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: radial-gradient(circle, rgba(255, 182, 213, 0.1) 0%, transparent 70%);
+    border-radius: 3rem;
+    z-index: -1;
+    animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.search-form {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1.5rem;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(255, 224, 239, 0.8), rgba(255, 240, 246, 0.8));
+    border-radius: 2.5rem;
+    box-shadow: 0 8px 32px rgba(255, 92, 168, 0.15);
+    padding: 1.5rem 2rem;
+    border: 2px solid rgba(255, 182, 213, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.search-form input {
     flex: 1;
-    padding: 1rem;
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    background: var(--surface-color);
-    color: var(--text-color);
-    transition: all 0.3s ease;
-}
-
-.search-box input:focus {
+    padding: 1.25rem 1.5rem;
+    border: 2px solid rgba(255, 182, 213, 0.5);
+    border-radius: 2rem;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, #fff, #ffe8f4);
+    color: #ff5ca8;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    min-width: 250px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(255, 92, 168, 0.1);
 }
 
-.search-box button {
-    padding: 1rem 1.5rem;
-    background: var(--gradient-primary);
+.search-form input::placeholder {
+    color: #ff8fab;
+    font-weight: 400;
+}
+
+.search-form input:focus {
+    background: linear-gradient(135deg, #fff, #fff0f6);
+    border-color: #ff5ca8;
+    box-shadow: 0 0 0 4px rgba(255, 92, 168, 0.15), 0 8px 24px rgba(255, 92, 168, 0.2);
+    transform: translateY(-2px);
+}
+
+.search-form button {
+    padding: 1.25rem 2.5rem;
+    background: linear-gradient(135deg, #ff5ca8, #ff8fab, #ff5ca8);
+    background-size: 200% 100%;
     color: white;
     border: none;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    font-size: 1rem;
+    border-radius: 2rem;
+    font-weight: 700;
+    font-size: 1.1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 20px rgba(255, 92, 168, 0.3);
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.search-box button::before {
+.search-form button::before {
+    content: '🔍';
+    font-size: 1.2rem;
+}
+
+.search-form button::after {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     transition: left 0.6s ease;
 }
 
-.search-box button:hover::before {
+.search-form button:hover {
+    background-position: right center;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 92, 168, 0.4);
+}
+
+.search-form button:hover::after {
     left: 100%;
 }
 
-.search-box button:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
+.search-form select {
+    padding: 1.25rem 1.5rem;
+    border: 2px solid rgba(255, 182, 213, 0.5);
+    border-radius: 2rem;
+    background: linear-gradient(135deg, #ffe0ef, #fff0f6);
+    color: #ff5ca8;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(255, 92, 168, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 140px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ff5ca8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 3rem;
 }
 
-.filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.filters select {
-    padding: 0.75rem 1rem;
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background: var(--surface-color);
-    color: var(--text-color);
-    transition: all 0.3s ease;
-}
-
-.filters select:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+.search-form select:focus {
     outline: none;
+    border-color: #ff5ca8;
+    box-shadow: 0 0 0 4px rgba(255, 92, 168, 0.15), 0 8px 24px rgba(255, 92, 168, 0.2);
+    transform: translateY(-2px);
+}
+
+.search-form select:hover {
+    background: linear-gradient(135deg, #fff0f6, #ffe8f4);
+    border-color: #ff8fab;
+    transform: translateY(-1px);
 }
 
 .stores-container {
@@ -101,19 +188,193 @@
 }
 
 .stores-list {
-    background: var(--surface-color);
-    border-radius: var(--border-radius-lg);
+    background: #fff;
+    border-radius: 1.5rem;
     padding: 2rem;
     height: 600px;
     overflow-y: auto;
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 4px 24px 0 rgba(255, 92, 168, 0.10);
 }
 
 .stores-map {
-    background: var(--light-gray);
-    border-radius: var(--border-radius-lg);
+    background: #ffe0ef;
+    border-radius: 1.5rem;
     height: 600px;
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 4px 24px 0 rgba(255, 92, 168, 0.10);
+}
+
+.pharmacy-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.pharmacy-card {
+    background: linear-gradient(145deg, #ffffff, #f8f9ff);
+    border: none;
+    padding: 0;
+    border-radius: 20px;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        0 1px 8px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.pharmacy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+    background-size: 300% 100%;
+    animation: rainbow 3s ease-in-out infinite;
+}
+
+.pharmacy-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.pharmacy-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.15),
+        0 8px 16px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+}
+
+.pharmacy-card.active {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.2),
+        0 6px 12px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 2px solid #667eea;
+}
+
+.pharmacy-card.active::before {
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+    animation: rainbow 1s ease-in-out infinite;
+}
+.pharmacy-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 255, 0.9));
+}
+
+.pharmacy-card h4 {
+    color: #2d3748;
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    flex: 1;
+    line-height: 1.3;
+}
+
+.pharmacy-card h4::before {
+    content: '🏥';
+    font-size: 1.3rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.location-info {
+    color: #718096;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: linear-gradient(135deg, #f7fafc, #edf2f7);
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.pharmacy-card .map-link {
+    display: inline-block;
+    margin: 0 1.5rem 1.5rem 1.5rem;
+    color: #4a5568;
+    text-decoration: none;
+    font-weight: 600;
+    background: linear-gradient(135deg, #f7fafc, #edf2f7);
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.pharmacy-card .map-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transition: left 0.6s ease;
+}
+.pharmacy-card .map-link:hover {
+    background: linear-gradient(135deg, #edf2f7, #e2e8f0);
+    color: #2d3748;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.pharmacy-card .map-link:hover::before {
+    left: 100%;
+}
+
+.no-data {
+    text-align: center;
+    color: #a38ca3;
+    margin-top: 3rem;
+}
+.no-data img {
+    margin-bottom: 1rem;
+    opacity: 0.7;
+}
+.no-data h3 {
+    color: #ff5ca8;
+    margin-bottom: 0.5rem;
 }
 
 .store-card {
@@ -212,20 +473,57 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .stores-container {
         grid-template-columns: 1fr;
     }
-
     .stores-map {
-        height: 400px;
+        height: 350px;
+        margin-top: 2rem;
     }
-
-    .search-box {
+    .search-container {
         flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
     }
-
-    .filters {
+    .search-form {
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+@media (max-width: 768px) {
+    .stores-section {
+        padding: 2rem 0.5rem;
+    }
+    .stores-list {
+        padding: 1rem;
+        height: 350px;
+    }
+    .stores-map {
+        height: 250px;
+    }
+    .search-form {
         flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+        width: 100%;
+    }
+    .search-form input, .search-form select {
+        min-width: 0;
+        width: 100%;
+    }
+}
+@media (max-width: 480px) {
+    .stores-section {
+        padding: 1rem 0.2rem;
+    }
+    .stores-list {
+        padding: 0.5rem;
+        height: 200px;
+    }
+    .stores-map {
+        height: 120px;
     }
 }

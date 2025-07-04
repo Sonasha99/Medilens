@@ -65,6 +65,154 @@
         margin-top: 2rem;
         font-size: 0.9rem;
       }
+      .hero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3rem;
+        padding: 3rem 2rem 2rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+      }
+      .hero-illustration {
+        flex: 1 1 400px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        min-width: 220px;
+        max-width: 600px;
+      }
+      .hero-illustration svg {
+        width: 100%;
+        height: auto;
+        max-width: 600px;
+        max-height: 600px;
+        filter: drop-shadow(0 8px 32px rgba(255,92,168,0.18));
+        display: block;
+      }
+      .hero-text-content {
+        flex: 2 1 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        min-width: 260px;
+        max-width: 600px;
+        margin-left: 2rem;
+      }
+      .hero-text-content h1 {
+        font-size: 3.2rem;
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+        color: #ff5ca8;
+        line-height: 1.08;
+      }
+      .hero-text-content p {
+        font-size: 1.55rem;
+        color: #a38ca3;
+        margin-bottom: 2.5rem;
+        line-height: 1.5;
+        max-width: 600px;
+      }
+      .cta-button {
+        display: inline-block;
+        padding: 1.1rem 2.5rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #ff5ca8, #ffb6d5);
+        color: white;
+        border: none;
+        border-radius: 2.5rem;
+        box-shadow: 0 6px 24px rgba(255, 92, 168, 0.18);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        letter-spacing: 0.5px;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .cta-button:hover {
+        background: linear-gradient(90deg, #ffb6d5, #ff5ca8);
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 12px 32px rgba(255, 92, 168, 0.22);
+      }
+      .hero-divider {
+        width: 100%;
+        max-width: 900px;
+        height: 4px;
+        background: linear-gradient(90deg, #ff5ca8, #ffb6d5, #ff5ca8);
+        border-radius: 2px;
+        margin: 2.5rem auto 2.5rem auto;
+        opacity: 0.7;
+      }
+      @media (max-width: 900px) {
+        .hero {
+          flex-direction: column;
+          gap: 2rem;
+          padding: 2rem 1rem 1.5rem 1rem;
+        }
+        .hero-illustration {
+          justify-content: center;
+          max-width: 400px;
+        }
+        .hero-illustration svg {
+          max-width: 400px;
+          max-height: 400px;
+        }
+        .hero-text-content {
+          align-items: center;
+          margin-left: 0;
+          text-align: center;
+        }
+      }
+      @media (max-width: 600px) {
+        .hero-text-content h1 {
+          font-size: 2.2rem;
+        }
+        .hero-text-content p {
+          font-size: 1.1rem;
+        }
+        .cta-button {
+          font-size: 1rem;
+          padding: 1rem 1.5rem;
+        }
+        .hero-divider {
+          margin: 1.2rem auto 1.2rem auto;
+        }
+        .hero-illustration {
+          max-width: 90vw;
+        }
+        .hero-illustration svg {
+          max-width: 90vw;
+          max-height: 300px;
+        }
+      }
+      .doctor-glow-bg {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 4000px;
+        height: 4000px;
+        transform: translate(-50%, -50%);
+        filter: blur(180px) brightness(1.18);
+        z-index: 0; /* ya jitna upar chahiye */
+        pointer-events: none;
+        animation: doctorGlowAnim 16s ease-in-out infinite alternate;
+      }
+      @keyframes doctorGlowAnim {
+        0% {
+          transform: translate(-50%, -50%) scale(1) rotate(0deg);
+          filter: blur(180px) brightness(1.18);
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.08) rotate(7deg);
+          filter: blur(210px) brightness(1.22);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1) rotate(-7deg);
+          filter: blur(180px) brightness(1.18);
+        }
+      }
     </style>
   </head>
   <body>
@@ -97,40 +245,42 @@
     <!-- Hero Section -->
     <section class="hero">
       <div class="hero-illustration">
-        <!-- Doctor SVG -->
-        <svg width="220" height="340" viewBox="0 0 220 340" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Shadow -->
-          <ellipse cx="110" cy="325" rx="60" ry="12" fill="#FFB6D5" fill-opacity="0.18"/>
-          <!-- Body -->
-          <rect x="80" y="120" width="60" height="120" rx="28" fill="#FFF0F6"/>
-          <rect x="85" y="140" width="50" height="100" rx="22" fill="#fff" stroke="#FFB6D5" stroke-width="2"/>
-          <rect x="60" y="110" width="20" height="70" rx="10" fill="#fff" stroke="#FFB6D5" stroke-width="2" transform="rotate(-25 70 145)"/>
-          <ellipse cx="58" cy="110" rx="8" ry="10" fill="#FFB6D5"/>
-          <ellipse cx="52" cy="104" rx="2.5" ry="5" fill="#FFB6D5"/>
-          <ellipse cx="56" cy="100" rx="2.5" ry="5" fill="#FFB6D5"/>
-          <ellipse cx="60" cy="98" rx="2.5" ry="5" fill="#FFB6D5"/>
-          <ellipse cx="64" cy="100" rx="2.5" ry="5" fill="#FFB6D5"/>
-          <rect x="150" y="150" width="20" height="70" rx="10" fill="#fff" stroke="#FFB6D5" stroke-width="2" transform="rotate(15 160 185)"/>
-          <ellipse cx="170" cy="220" rx="8" ry="10" fill="#FFB6D5"/>
-          <rect x="165" y="185" width="18" height="28" rx="3" fill="#FFB6D5" stroke="#FF5CA8" stroke-width="2"/>
-          <rect x="170" y="190" width="8" height="2" rx="1" fill="#fff"/>
-          <rect x="170" y="195" width="12" height="2" rx="1" fill="#fff"/>
-          <rect x="170" y="200" width="10" height="2" rx="1" fill="#fff"/>
-          <rect x="90" y="240" width="12" height="60" rx="6" fill="#FFB6D5"/>
-          <rect x="118" y="240" width="12" height="60" rx="6" fill="#FFB6D5"/>
-          <ellipse cx="96" cy="305" rx="10" ry="6" fill="#FF5CA8"/>
-          <ellipse cx="124" cy="305" rx="10" ry="6" fill="#FF5CA8"/>
-          <ellipse cx="110" cy="90" rx="28" ry="32" fill="#FFF0F6"/>
-          <ellipse cx="110" cy="80" rx="16" ry="18" fill="#fff"/>
-          <ellipse cx="110" cy="80" rx="10" ry="11" fill="#FFB6D5" fill-opacity="0.18"/>
-          <ellipse cx="110" cy="80" rx="6" ry="6.5" fill="#FF5CA8"/>
-          <ellipse cx="110" cy="80" rx="3" ry="3.5" fill="#fff"/>
-          <ellipse cx="106" cy="78" rx="1.5" ry="2" fill="#3A2C3A"/>
-          <ellipse cx="114" cy="78" rx="1.5" ry="2" fill="#3A2C3A"/>
-          <path d="M107 85 Q110 89 113 85" stroke="#FF5CA8" stroke-width="2" fill="none"/>
-          <path d="M110 110 Q110 130 130 130" stroke="#FF5CA8" stroke-width="2" fill="none"/>
-          <circle cx="130" cy="130" r="4" fill="#FF5CA8"/>
-        </svg>
+        <div class="doctor-glow-bg"></div>
+        <div class="doctor-float-anim">
+          <svg viewBox="0 0 220 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Shadow -->
+            <ellipse cx="110" cy="325" rx="60" ry="12" fill="#FFB6D5" fill-opacity="0.18"/>
+            <!-- Body -->
+            <rect x="80" y="120" width="60" height="120" rx="28" fill="#FFF0F6"/>
+            <rect x="85" y="140" width="50" height="100" rx="22" fill="#fff" stroke="#FFB6D5" stroke-width="2"/>
+            <rect x="60" y="110" width="20" height="70" rx="10" fill="#fff" stroke="#FFB6D5" stroke-width="2" transform="rotate(-25 70 145)"/>
+            <ellipse cx="58" cy="110" rx="8" ry="10" fill="#FFB6D5"/>
+            <ellipse cx="52" cy="104" rx="2.5" ry="5" fill="#FFB6D5"/>
+            <ellipse cx="56" cy="100" rx="2.5" ry="5" fill="#FFB6D5"/>
+            <ellipse cx="60" cy="98" rx="2.5" ry="5" fill="#FFB6D5"/>
+            <ellipse cx="64" cy="100" rx="2.5" ry="5" fill="#FFB6D5"/>
+            <rect x="150" y="150" width="20" height="70" rx="10" fill="#fff" stroke="#FFB6D5" stroke-width="2" transform="rotate(15 160 185)"/>
+            <ellipse cx="170" cy="220" rx="8" ry="10" fill="#FFB6D5"/>
+            <rect x="165" y="185" width="18" height="28" rx="3" fill="#FFB6D5" stroke="#FF5CA8" stroke-width="2"/>
+            <rect x="170" y="190" width="8" height="2" rx="1" fill="#fff"/>
+            <rect x="170" y="195" width="12" height="2" rx="1" fill="#fff"/>
+            <rect x="170" y="200" width="10" height="2" rx="1" fill="#fff"/>
+            <rect x="90" y="240" width="12" height="60" rx="6" fill="#FFB6D5"/>
+            <rect x="118" y="240" width="12" height="60" rx="6" fill="#FFB6D5"/>
+            <ellipse cx="96" cy="305" rx="10" ry="6" fill="#FF5CA8"/>
+            <ellipse cx="124" cy="305" rx="10" ry="6" fill="#FF5CA8"/>
+            <ellipse cx="110" cy="90" rx="28" ry="32" fill="#FFF0F6"/>
+            <ellipse cx="110" cy="80" rx="16" ry="18" fill="#fff"/>
+            <ellipse cx="110" cy="80" rx="10" ry="11" fill="#FFB6D5" fill-opacity="0.18"/>
+            <ellipse cx="110" cy="80" rx="6" ry="6.5" fill="#FF5CA8"/>
+            <ellipse cx="110" cy="80" rx="3" ry="3.5" fill="#fff"/>
+            <ellipse cx="106" cy="78" rx="1.5" ry="2" fill="#3A2C3A"/>
+            <ellipse cx="114" cy="78" rx="1.5" ry="2" fill="#3A2C3A"/>
+            <path d="M107 85 Q110 89 113 85" stroke="#FF5CA8" stroke-width="2" fill="none"/>
+            <path d="M110 110 Q110 130 130 130" stroke="#FF5CA8" stroke-width="2" fill="none"/>
+            <circle cx="130" cy="130" r="4" fill="#FF5CA8"/>
+          </svg>
+        </div>
       </div>
       <div class="hero-text-content">
         <h1 class="hero-heading-animate">AI-Powered Healthcare Solutions</h1>
@@ -138,9 +288,12 @@
           Revolutionizing healthcare with advanced AI for prescription scanning,
           report generation, and medical store locator services.
         </p>
-        <a href="{{ url_for('scanner_page') }}" class="cta-button">Get Started</a>
+        <a href="{{ url_for('scanner_page') }}" class="cta-button" style="margin-top: 1.2rem; margin-left: 12rem; display: inline-block;">Get Started</a>
       </div>
     </section>
+    <div class="hero-divider"></div>
+
+
     <!-- Feature Cards -->
     <section class="features">
       <div class="feature-card">
