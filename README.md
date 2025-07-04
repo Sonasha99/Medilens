@@ -1,84 +1,112 @@
-Perfect! Here's the updated `README.md` with a clear **Frontend / Backend folder structure section** so others can easily understand which files belong where:
+
+# 🩺 MediLens 2
+
+MediLens 2 is an AI-powered healthcare assistant that helps users scan prescriptions, find nearby medical stores, and access essential health tools in one place.
 
 ---
 
-```markdown
-# MediLens 2
+## ✨ Features
 
-MediLens 2 is a healthcare-focused web application designed to streamline medical tasks like prescription scanning, medicine lookup, and basic medical record support.
+- 🧾 Upload & scan handwritten prescriptions using AI
+- 🔍 Extract & identify medicines from scanned images
+- 💊 Locate nearby pharmacies using live maps
+- 📊 Generate basic medical reports (optional)
+- 📱 Mobile-responsive and user-friendly design
 
-## 🚀 Features
-
-- 🧾 Upload and scan medical prescriptions
-- 🔍 Extract and identify medicine names using OCR
-- 💊 Search and display medicine information
-- 📁 (Optional) Manage basic health records
-- 📲 Responsive UI for mobile and desktop
+---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React.js, Tailwind CSS
-- **Backend:** Node.js, Express.js
-- **OCR/ML Integration:** Tesseract.js or relevant library
-- **Database:** MongoDB (if included)
-- **Deployment:** Render / Vercel / Netlify
-
----
-## file location 
-1.app.py, detect.py, inference.py → This is a Flask (Python) backend project.
-2.package.json → Suggests there might be some Node.js/JavaScript frontend or UI dependency, but it's in the same folder as the Python code.
-3.requirements.txt → Confirms this is primarily a Python project.
-4.vercel.json, render.yaml → Deployment configs (Vercel likely for frontend/API, Render for backend).
-
-
-> 📌 Note: If both frontend and backend are in the same repo, you can run each part separately using `npm install` and `npm start` inside each folder.
+| Layer       | Technologies Used                        |
+|------------|-------------------------------------------|
+| **Frontend**  | HTML, CSS, Jinja2 (Flask Templates)       |
+| **Backend**   | Python (Flask), OpenStreetMap + Leaflet.js |
+| **ML/OCR**    | Custom model with Tesseract / inference.py |
+| **Deployment**| Render (backend) + Vercel (frontend static files) |
 
 ---
 
-## 🧑‍💻 Run Locally
+## 🗂 Folder Structure
 
-### 1. Clone the repository
+| File/Folder              | Description                              |
+|--------------------------|------------------------------------------|
+| `app.py`                 | Main Flask backend application           |
+| `detect.py` / `inference.py` | ML and OCR processing logic              |
+| `templates/`             | HTML (Jinja2) files served via Flask     |
+| `static/`                | CSS, JS, icons, and frontend assets      |
+| `render.yaml`            | Backend deployment config (Render)       |
+| `vercel.json`            | (Optional) Frontend deploy config (Vercel)|
+| `requirements.txt`       | Python dependencies                      |
+
+---
+
+## 🚀 Live Deployment
+
+| Platform   | Link                                      |
+|------------|-------------------------------------------|
+| 🔗 Backend (Render)  | [https://medilens-backend.onrender.com](#) *(update this)* |
+| 🔗 Frontend (Vercel) | [https://medilens.vercel.app](#) *(update this)*           |
+
+> 💡 If you’ve deployed the full app on Render alone (frontend + backend via Flask), just use the backend link.
+
+---
+
+## 🧑‍💻 How to Run Locally
+
+### 1. Clone the repo
 
 ```bash
 git clone https://github.com/taneesha1/medilens-2.git
 cd medilens-2
 ````
 
-### 2. Start Backend
+---
+
+### 2. Install backend dependencies
 
 ```bash
-cd backend
-npm install
-npm start
+pip install -r requirements.txt
 ```
 
-### 3. Start Frontend
+---
 
-In a separate terminal:
+### 3. Start the Flask server
 
 ```bash
-cd frontend
-npm install
-npm start
+python app2.py
 ```
+
+🌐 Visit `http://127.0.0.1:5000` in your browser.
+
+---
+
+## 📦 Deployment Guide
+
+### Deploy to Render (Backend + Templates)
+
+1. Create a [Render](https://render.com) account
+2. Connect your GitHub repo
+3. Set:
+
+   * **Build Command:** `pip install -r requirements.txt`
+   * **Start Command:** `python app.py`
+   * **Environment:** `Python`
+4. Add environment variables (if needed)
+
+---
+
+### Deploy to Vercel (Frontend only, optional)
+
+If you extract your `templates/` and `static/` folder as a frontend-only project:
+
+1. Create a [Vercel](https://vercel.com) project
+2. Drag and drop the frontend files
+3. Vercel will auto-deploy with default settings
 
 ---
 
 ## 📸 Screenshots
 
-*Place UI screenshots here (optional).*
+> *(Coming Soon)* Add visuals of your prescription scanner, map view, and report UI here.
 
 ---
-
-
-
-## 📄 License
-
-MIT License. See [LICENSE](LICENSE) for more details.
-
-```
-
----
-
-Would you like me to check the repo structure and tailor this section more precisely to the actual folders like `src`, `api`, or `controllers` if they exist?
-```
