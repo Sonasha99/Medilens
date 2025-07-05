@@ -1,5 +1,5 @@
 
-# 🩺 MediLens 2
+#  MediLens 🩺 
 
 MediLens 2 is an AI-powered healthcare assistant that helps users scan prescriptions, find nearby medical stores, and access essential health tools in one place.
 
