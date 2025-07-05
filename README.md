@@ -40,12 +40,7 @@ MediLens 2 is an AI-powered healthcare assistant that helps users scan prescript
 
 ---
 
-## 🚀 Live Deployment
-
-| Platform   | Link                                      |
-|------------|-------------------------------------------|
-| 🔗 Backend (Render)  | [https://medilens-backend.onrender.com](#) *(update this)* |
-| 🔗 Frontend (Vercel) | [https://medilens.vercel.app](#) *(update this)*           |
+## 🚀 Live Deployment - https://medilens-i8kf.onrender.com/
 
 > 💡 If you’ve deployed the full app on Render alone (frontend + backend via Flask), just use the backend link.
 
