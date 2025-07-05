@@ -33,6 +33,13 @@ from report import MedicalReportGenerator
 # Initialize REPORT_MODULE_AVAILABLE first
 REPORT_MODULE_AVAILABLE = False
 
+app = Flask(__name__)
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+
 # Import your custom report generation functions
 try:
     from report import (
@@ -648,7 +655,12 @@ if __name__ == '__main__':
     
     print("\nDebug route available at: http://localhost:5000/debug")
     print("="*50)
-    
-    app.run( host='127.0.0.1', port=5000, debug=True)
+
+
+if __name__ == '__main__':
+    ensure_upload_directory()
+    port = int(os.environ.get('PORT', 10000))  # Render sets PORT dynamically
+    app.run(host='0.0.0.0', port=port)
+
 
    
