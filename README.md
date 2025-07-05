@@ -10,7 +10,7 @@ MediLens 2 is an AI-powered healthcare assistant that helps users scan prescript
 - 🧾 Upload & scan handwritten prescriptions using AI
 - 🔍 Extract & identify medicines from scanned images
 - 💊 Locate nearby pharmacies using live maps
-- 📊 Generate basic medical reports (optional)
+- 📊 Generate basic medical reports from ultrasound
 - 📱 Mobile-responsive and user-friendly design
 
 ---
@@ -73,6 +73,7 @@ pip install ultralytics
 ### 3. Start the Flask server
 
 ```bash
+ cd backend
 python app2.py
 ```
 
@@ -89,7 +90,7 @@ python app2.py
 3. Set:
 
    * **Build Command:** `pip install -r requirements.txt`
-   * **Start Command:** `python app.py`
+   * **Start Command:** `python app2.py`
    * **Environment:** `Python`
 4. Add environment variables (if needed)
 
@@ -106,7 +107,10 @@ If you extract your `templates/` and `static/` folder as a frontend-only project
 ---
 
 ## 📸 Screenshots
+*Home Page*
+![image](https://github.com/user-attachments/assets/32a4ca0a-8455-4448-a58a-4a3fdf7d2e07)
+*Prescription Scanner page*
+![image](https://github.com/user-attachments/assets/eef8eb28-029d-4174-b84d-888336da28be)
 
-> *(Coming Soon)* Add visuals of your prescription scanner, map view, and report UI here.
 
----
+
