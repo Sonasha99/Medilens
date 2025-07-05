@@ -75,6 +75,20 @@
                                         <h4>{{ pharmacy.name }}</h4>
                                         <span class="location-info">📍 {{ pharmacy.lat }}, {{ pharmacy.lon }}</span>
                                     </div>
+                                    <div class="pharmacy-details" style="display: flex; align-items: center; gap: 1.5rem; padding: 0 1.5rem 1.2rem 1.5rem;">
+                                        <span class="phone-info" style="display: flex; align-items: center; gap: 0.4rem; color: #ff5ca8; font-weight: 600; font-size: 1.05rem;">
+                                            <i class="fas fa-phone-alt" style="color: #ff5ca8;"></i>
+                                            +91 98765 43210
+                                        </span>
+                                        <span class="star-rating" style="display: flex; align-items: center; gap: 0.2rem; color: #FFD700; font-size: 1.1rem;">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                            <span style="color: #2d3748; font-weight: 600; font-size: 1rem; margin-left: 0.3rem;">4.5</span>
+                                        </span>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
