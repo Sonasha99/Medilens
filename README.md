@@ -83,28 +83,17 @@ python app2.py
 
 ## 📦 Deployment Guide
 
-### Deploy to Render (Backend + Templates)
+### Deploy on Render 
 
 1. Create a [Render](https://render.com) account
 2. Connect your GitHub repo
 3. Set:
 
    * **Build Command:** `pip install -r requirements.txt`
+   * **Branch : ** Backend
    * **Start Command:** `python app2.py`
    * **Environment:** `Python`
-4. Add environment variables (if needed)
 
----
-
-### Deploy to Vercel (Frontend only, optional)
-
-If you extract your `templates/` and `static/` folder as a frontend-only project:
-
-1. Create a [Vercel](https://vercel.com) project
-2. Drag and drop the frontend files
-3. Vercel will auto-deploy with default settings
-
----
 
 ## 📸 Screenshots
 *Home Page*
