@@ -42,17 +42,16 @@ MediLens 2 is an AI-powered healthcare assistant that helps users scan prescript
 
 ## 🚀 Live Deployment - https://medilens-i8kf.onrender.com/
 
-> 💡 If you’ve deployed the full app on Render alone (frontend + backend via Flask), just use the backend link.
-
----
 
 ## 🧑‍💻 How to Run Locally
 
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/taneesha1/medilens-2.git
+git clone https://github.com/Sonasha99/Medilens.git
 cd medilens-2
+pip install reportlab
+python app2.py
 ````
 
 ---
